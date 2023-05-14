@@ -57,7 +57,7 @@ public class Chessboard {
             }
         }
     }
-    private void initPieces() {
+    public void initPieces() {
         grid[6][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Elephant",8));
         grid[6][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Wolf",4));
         grid[6][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Leopard",5));
@@ -415,5 +415,25 @@ public class Chessboard {
                 getGridAt(point).getPiece().setRank(8);
                 break;
         }
+    }
+    public void runStep(Step step){
+        ChessboardPoint fromPoint = step.getFrom();
+        ChessboardPoint toPoint = step.getTo();
+        ChessPiece fromPiece = step.getFromChessPiece();
+        setChessPiece(fromPoint, null);
+        setChessPiece(toPoint, fromPiece);
+    }
+    public Step recordStep(ChessboardPoint fromPoint, ChessboardPoint toPoint, PlayerColor currentPlayer, int turn){
+        ChessPiece fromPiece = getChessPieceAt(fromPoint);
+        ChessPiece toPiece = getChessPieceAt(toPoint);
+        Step step = new Step(fromPoint, toPoint, fromPiece, toPiece, currentPlayer, turn);
+//        System.out.println(step);
+        return step;
+    }
+    public boolean solveDens(ChessboardPoint destPoint) {
+        if (getGridAt(destPoint).getType() == GridType.den) {
+            return true;
+        }
+        return false;
     }
 }

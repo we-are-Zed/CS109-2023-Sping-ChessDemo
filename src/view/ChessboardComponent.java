@@ -3,13 +3,12 @@ package view;
 
 import controller.GameController;
 import model.*;
+import view.Animal.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import static model.Constant.CHESSBOARD_COL_SIZE;
@@ -22,6 +21,17 @@ public class ChessboardComponent extends JComponent {
     private final CellComponent[][] gridComponents = new CellComponent[CHESSBOARD_ROW_SIZE.getNum()][CHESSBOARD_COL_SIZE.getNum()];
     private final int CHESS_SIZE;
     private final Set<ChessboardPoint> riverCell = new HashSet<>();
+    private final Set<ChessboardPoint> trapCell = new HashSet<>();
+    private final Set<ChessboardPoint> denCell = new HashSet<>();
+
+    public Color DayGrass = new Color(120,204,0);
+    public Color NightGrass = new Color(5,88,37);
+    public Color DayRiver =  new Color(114,218,210);
+    public Color NightRiver =  new Color(8,127,152);
+    public Color DayTrap =  new Color(245, 105, 105);
+    public Color NightTrap =  new Color(131, 17, 17);
+    public Color DayDen =  new Color(192, 192, 192);
+    public Color NightDen =  new Color(100, 100, 100);
 
     private GameController gameController;
 
@@ -43,21 +53,35 @@ public class ChessboardComponent extends JComponent {
      * according to Chessboard information
      */
     public void initiateChessComponent(Chessboard chessboard) {
-        Cell[][] grid = chessboard.getGrid();
+        Cell[][] grid = chessboard.getGrid();//就是chessboard里的grid，只是不想用get写
+
         for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
-                // TODO: Implement the initialization checkerboard
-
                 if (grid[i][j].getPiece() != null) {
                     ChessPiece chessPiece = grid[i][j].getPiece();
                     System.out.println(chessPiece.getOwner());
-                    gridComponents[i][j].add(
-                            new ElephantChessComponent(
-                                    chessPiece.getOwner(),
-                                    CHESS_SIZE));
+                    if(grid[i][j].getPiece().getName().equals("Elephant")){
+                        gridComponents[i][j].add(new ElephantChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }else if(grid[i][j].getPiece().getName().equals("Lion")){
+                        gridComponents[i][j].add(new LionChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }else if(grid[i][j].getPiece().getName().equals("Tiger")){
+                        gridComponents[i][j].add(new TigerChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }else if(grid[i][j].getPiece().getName().equals("Leopard")){
+                        gridComponents[i][j].add(new LeopardChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }else if(grid[i][j].getPiece().getName().equals("Wolf")){
+                        gridComponents[i][j].add(new WolfChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }else if(grid[i][j].getPiece().getName().equals("Dog")){
+                        gridComponents[i][j].add(new DogChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }else if(grid[i][j].getPiece().getName().equals("Cat")){
+                        gridComponents[i][j].add(new CatChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }else if(grid[i][j].getPiece().getName().equals("Rat")){
+                        gridComponents[i][j].add(new RatChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }
+
                 }
             }
         }
+
     }
 
     public void initiateGridComponents() {
@@ -76,15 +100,32 @@ public class ChessboardComponent extends JComponent {
         riverCell.add(new ChessboardPoint(5,4));
         riverCell.add(new ChessboardPoint(5,5));
 
+        trapCell.add(new ChessboardPoint(0,2));
+        trapCell.add(new ChessboardPoint(0,4));
+        trapCell.add(new ChessboardPoint(1,3));
+
+        trapCell.add(new ChessboardPoint(8,2));
+        trapCell.add(new ChessboardPoint(8,4));
+        trapCell.add(new ChessboardPoint(7,3));
+
+        denCell.add(new ChessboardPoint(0,3));
+        denCell.add(new ChessboardPoint(8,3));
+
         for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
                 ChessboardPoint temp = new ChessboardPoint(i, j);
                 CellComponent cell;
                 if (riverCell.contains(temp)) {
-                    cell = new CellComponent(Color.CYAN, calculatePoint(i, j), CHESS_SIZE);
+                    cell = new CellComponent(DayRiver, calculatePoint(i, j), CHESS_SIZE);
                     this.add(cell);
-                } else {
-                    cell = new CellComponent(Color.LIGHT_GRAY, calculatePoint(i, j), CHESS_SIZE);
+                } else if(trapCell.contains(temp)){
+                    cell = new CellComponent(DayTrap, calculatePoint(i, j), CHESS_SIZE);
+                    this.add(cell);
+                }else if(denCell.contains(temp)){
+                    cell = new CellComponent(DayDen, calculatePoint(i, j), CHESS_SIZE);
+                    this.add(cell);
+                }else{
+                    cell = new CellComponent(DayGrass, calculatePoint(i, j), CHESS_SIZE);
                     this.add(cell);
                 }
                 gridComponents[i][j] = cell;
@@ -137,8 +178,9 @@ public class ChessboardComponent extends JComponent {
                 gameController.onPlayerClickCell(getChessboardPoint(e.getPoint()), (CellComponent) clickedComponent);
             } else {
                 System.out.print("One chess here and ");
-                gameController.onPlayerClickChessPiece(getChessboardPoint(e.getPoint()), (ElephantChessComponent) clickedComponent.getComponents()[0]);
+gameController.onPlayerClickChess(getChessboardPoint(e.getPoint()), (ElephantChessComponent) clickedComponent.getComponents()[0]);
             }
         }
     }
+
 }
