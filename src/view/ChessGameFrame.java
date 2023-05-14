@@ -16,8 +16,8 @@ public class ChessGameFrame extends JFrame {
     private final int HEIGTH;
 //    private ImagePanel mainPanel;
 //    private String[] bgPaths = {"/gameBg.jpg", "/gameBg2.jpg"};
+
     private final int ONE_CHESS_SIZE;
-    private JLabel statusLabel;
 
     private ChessboardComponent chessboardComponent;
     public ChessboardComponent getChessboardComponent() {
@@ -155,9 +155,8 @@ public class ChessGameFrame extends JFrame {
         add(loadButton);
     }
 
-    public void updateStatus(String status) {
-        statusLabel.setText(status);
-    }
+
+
 
 
 //    private void addLoadButton() {
