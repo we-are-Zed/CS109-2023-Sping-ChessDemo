@@ -378,4 +378,42 @@ public class Chessboard {
         }
         return calculateDistance(src,dest)==1&&srcPiece.canCapture(destPiece);
     }
+    public void getTrapped(ChessboardPoint point) {
+        getGridAt(point).getPiece().setRank(0);
+    }
+    public void solveTrap(ChessboardPoint selectedPoint, ChessboardPoint destPoint) {
+        if (getGridAt(destPoint).getType() == GridType.trap && getGridAt(destPoint).getOwner() != getChessPieceAt(selectedPoint).getOwner()) {
+            getTrapped(selectedPoint);
+        } else if (getGridAt(selectedPoint).getType() == GridType.trap && getGridAt(selectedPoint).getOwner() != getChessPieceAt(selectedPoint).getOwner()) {
+            exitTrap(selectedPoint);
+        }
+    }
+    public void exitTrap(ChessboardPoint point) {
+        switch (getGridAt(point).getPiece().getName()) {
+            case "Rat":
+                getGridAt(point).getPiece().setRank(1);
+                break;
+            case "Cat":
+                getGridAt(point).getPiece().setRank(2);
+                break;
+            case "Dog":
+                getGridAt(point).getPiece().setRank(3);
+                break;
+            case "Wolf":
+                getGridAt(point).getPiece().setRank(4);
+                break;
+            case "Leopard":
+                getGridAt(point).getPiece().setRank(5);
+                break;
+            case "Tiger":
+                getGridAt(point).getPiece().setRank(6);
+                break;
+            case "Lion":
+                getGridAt(point).getPiece().setRank(7);
+                break;
+            case "Elephant":
+                getGridAt(point).getPiece().setRank(8);
+                break;
+        }
+    }
 }

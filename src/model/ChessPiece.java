@@ -29,6 +29,14 @@ public class ChessPiece {
 
         return false;
     }
+    public void setRank(int rank){
+        this.rank=rank;
+    }
+    public int getRank()
+    {
+        return rank;
+    }
+
 
     public String getName() {
         return name;
