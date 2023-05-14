@@ -8,6 +8,7 @@ import model.Chessboard;
 import model.ChessboardPoint;
 import view.CellComponent;
 import view.Animal.ElephantChessComponent;
+import view.ChessComponent;
 import view.ChessboardComponent;
 
 /**
@@ -23,6 +24,8 @@ public class GameController implements GameListener {
     private Chessboard model;
     private ChessboardComponent view;
     private PlayerColor currentPlayer;
+    private int turnCount = 1;
+    private PlayerColor winner;
 
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
@@ -47,13 +50,28 @@ public class GameController implements GameListener {
     }
 
     // after a valid move swap the player
-    private void swapColor() {
+    private void swapColor(boolean isUndo) {
+        if (!isUndo) {
+            turnCount++;
+        } else {
+            turnCount--;
+        }
         currentPlayer = currentPlayer == PlayerColor.BLUE ? PlayerColor.RED : PlayerColor.BLUE;
     }
 
     private boolean win() {
         // TODO: Check the board if there is a winner
         return false;
+    }
+    public void restart() {
+        model.initPieces();
+        view.initiateGridComponents();
+        view.initiateChessComponent(model);
+        view.repaint();
+        currentPlayer = PlayerColor.BLUE;
+        winner = null;
+        selectedPoint = null;
+        turnCount = 1;
     }
 
 
@@ -64,7 +82,7 @@ public class GameController implements GameListener {
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
-            swapColor();
+            swapColor(false);
             view.repaint();
             // TODO: if the chess enter Dens or Traps and so on
         }
@@ -72,7 +90,7 @@ public class GameController implements GameListener {
 
     // click a cell with a chess
     @Override
-    public void onPlayerClickChessPiece(ChessboardPoint point, ElephantChessComponent component) {
+    public void onPlayerClickChessPiece(ChessboardPoint point, ChessComponent component) {
         if (selectedPoint == null) {
             if (model.getChessPieceOwner(point).equals(currentPlayer)) {
                 selectedPoint = point;
