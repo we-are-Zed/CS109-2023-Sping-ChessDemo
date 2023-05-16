@@ -1,7 +1,6 @@
 package model;
 
-import view.GridType;
-
+import model.GridType;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -11,96 +10,101 @@ import java.util.Set;
  * The Chessboard has 9*7 cells, and each cell has a position for chess
  */
 public class Chessboard {
-    private Cell[][] grid;
-    private final Set<ChessboardPoint> riverCell=new HashSet<>();
-    private final Set<ChessboardPoint> denCell=new HashSet<>();
-    private final Set<ChessboardPoint> trapCell=new HashSet<>();
+    public Cell[][] grid;
+    public final Set<ChessboardPoint> riverCell = new HashSet<>();
+    public final Set<ChessboardPoint> denCell = new HashSet<>();
+    public final Set<ChessboardPoint> trapCell = new HashSet<>();
 
     public Chessboard() {
-        this.grid =
-                new Cell[Constant.CHESSBOARD_ROW_SIZE.getNum()][Constant.CHESSBOARD_COL_SIZE.getNum()];//19X19
+        this.grid = new Cell[Constant.CHESSBOARD_ROW_SIZE.getNum()][Constant.CHESSBOARD_COL_SIZE.getNum()];//19X19
 
         initGrid();
         initSets();
         initPieces();
     }
+    public void initPieces() {
+        grid[6][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Elephant", 8));
+        grid[6][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Wolf", 4));
+        grid[6][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Leopard", 5));
+        grid[6][6].setPiece(new ChessPiece(PlayerColor.BLUE, "Rat", 1));
+        grid[7][1].setPiece(new ChessPiece(PlayerColor.BLUE, "Cat", 2));
+        grid[7][5].setPiece(new ChessPiece(PlayerColor.BLUE, "Dog", 3));
+        grid[8][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Tiger", 6));
+        grid[8][6].setPiece(new ChessPiece(PlayerColor.BLUE, "Lion", 7));
+
+        grid[2][6].setPiece(new ChessPiece(PlayerColor.RED, "Elephant", 8));
+        grid[2][4].setPiece(new ChessPiece(PlayerColor.RED, "Wolf", 4));
+        grid[2][2].setPiece(new ChessPiece(PlayerColor.RED, "Leopard", 5));
+        grid[2][0].setPiece(new ChessPiece(PlayerColor.RED, "Rat", 1));
+        grid[1][1].setPiece(new ChessPiece(PlayerColor.RED, "Dog", 3));
+        grid[1][5].setPiece(new ChessPiece(PlayerColor.RED, "Cat", 2));
+        grid[0][0].setPiece(new ChessPiece(PlayerColor.RED, "Lion", 7));
+        grid[0][6].setPiece(new ChessPiece(PlayerColor.RED, "Tiger", 6));
+    }
+    private void initSets() {
+        riverCell.add(new ChessboardPoint(3, 1));
+        riverCell.add(new ChessboardPoint(3, 2));
+        riverCell.add(new ChessboardPoint(3, 4));
+        riverCell.add(new ChessboardPoint(3, 5));
+        riverCell.add(new ChessboardPoint(4, 1));
+        riverCell.add(new ChessboardPoint(4, 2));
+        riverCell.add(new ChessboardPoint(4, 4));
+        riverCell.add(new ChessboardPoint(4, 5));
+        riverCell.add(new ChessboardPoint(5, 1));
+        riverCell.add(new ChessboardPoint(5, 2));
+        riverCell.add(new ChessboardPoint(5, 4));
+        riverCell.add(new ChessboardPoint(5, 5));
+
+
+        denCell.add(new ChessboardPoint(8, 3));
+        denCell.add(new ChessboardPoint(0, 3));
+
+        trapCell.add(new ChessboardPoint(7, 3));
+        trapCell.add(new ChessboardPoint(0, 2));
+        trapCell.add(new ChessboardPoint(0, 4));
+        trapCell.add(new ChessboardPoint(1, 3));
+        trapCell.add(new ChessboardPoint(8, 2));
+        trapCell.add(new ChessboardPoint(8, 4));
+    }
 
     private void initGrid() {
         for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++) {
-                if (riverCell.contains(new ChessboardPoint(i, j))) {
-                    grid[i][j] = new Cell(GridType.river);
-                } else if (trapCell.contains(new ChessboardPoint(i, j))) {
-                    grid[i][j] = new Cell(GridType.trap);
-                    if(i<2)
-                    {
-                        grid[i][j].setOwner(PlayerColor.RED);
-                    }
-                    else{
-                        grid[i][j].setOwner(PlayerColor.BLUE);
-                    }
-                }
-                else if(denCell.contains(new ChessboardPoint(i,j)))
-                {
-                    grid[i][j] = new Cell(GridType.den);
-                    if(i<2)
-                    {
-                        grid[i][j].setOwner(PlayerColor.RED);
-                    }
-                    else {
-                        grid[i][j].setOwner(PlayerColor.BLUE);
-                    }
-                }
-                else {
-                    grid[i][j] = new Cell(GridType.grass);
-                }
+                grid[i][j] = new Cell(GridType.grass);
             }
         }
-    }
-    public void initPieces() {
-        grid[6][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Elephant",8));
-        grid[6][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Wolf",4));
-        grid[6][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Leopard",5));
-        grid[6][6].setPiece(new ChessPiece(PlayerColor.BLUE, "Rat",1));
-        grid[7][1].setPiece(new ChessPiece(PlayerColor.BLUE, "Cat",2));
-        grid[7][5].setPiece(new ChessPiece(PlayerColor.BLUE, "Dog",3));
-        grid[8][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Tiger",6));
-        grid[8][6].setPiece(new ChessPiece(PlayerColor.BLUE, "Lion",7));
+        grid[3][1].setType(GridType.river);
+        grid[3][2].setType(GridType.river);
+        grid[3][4].setType(GridType.river);
+        grid[3][5].setType(GridType.river);
+        grid[4][1].setType(GridType.river);
+        grid[4][2].setType(GridType.river);
+        grid[4][4].setType(GridType.river);
+        grid[4][5].setType(GridType.river);
+        grid[5][1].setType(GridType.river);
+        grid[5][2].setType(GridType.river);
+        grid[5][4].setType(GridType.river);
+        grid[5][5].setType(GridType.river);
 
-        grid[2][6].setPiece(new ChessPiece(PlayerColor.RED, "Elephant",8));
-        grid[2][4].setPiece(new ChessPiece(PlayerColor.RED, "Wolf",4));
-        grid[2][2].setPiece(new ChessPiece(PlayerColor.RED, "Leopard",5));
-        grid[2][0].setPiece(new ChessPiece(PlayerColor.RED, "Rat",1));
-        grid[1][1].setPiece(new ChessPiece(PlayerColor.RED, "Dog",3));
-        grid[1][5].setPiece(new ChessPiece(PlayerColor.RED, "Cat",2));
-        grid[0][0].setPiece(new ChessPiece(PlayerColor.RED, "Lion",7));
-        grid[0][6].setPiece(new ChessPiece(PlayerColor.RED, "Tiger",6));
-    }
-    private void initSets()
-    {
-     riverCell.add(new ChessboardPoint(3,1));
-     riverCell.add(new ChessboardPoint(3,2));
-     riverCell.add(new ChessboardPoint(3,4));
-     riverCell.add(new ChessboardPoint(3,5));
-     riverCell.add(new ChessboardPoint(4,1));
-     riverCell.add(new ChessboardPoint(4,2));
-     riverCell.add(new ChessboardPoint(4,4));
-     riverCell.add(new ChessboardPoint(4,5));
-     riverCell.add(new ChessboardPoint(5,1));
-     riverCell.add(new ChessboardPoint(5,2));
-     riverCell.add(new ChessboardPoint(5,4));
-     riverCell.add(new ChessboardPoint(5,5));
+        grid[8][3].setType(GridType.den);
+        grid[0][3].setType(GridType.den);
 
+        grid[7][3].setType(GridType.trap);
+        grid[0][2].setType(GridType.trap);
+        grid[0][4].setType(GridType.trap);
+        grid[1][3].setType(GridType.trap);
+        grid[8][2].setType(GridType.trap);
+        grid[8][4].setType(GridType.trap);
 
-     denCell.add(new ChessboardPoint(8,3));
-     denCell.add(new ChessboardPoint(0,3));
+        grid[0][3].setOwner(PlayerColor.RED);
+        grid[8][3].setOwner(PlayerColor.BLUE);
 
-        trapCell.add(new ChessboardPoint(7,3));
-        trapCell.add(new ChessboardPoint(0,2));
-        trapCell.add(new ChessboardPoint(0,4));
-        trapCell.add(new ChessboardPoint(1,3));
-        trapCell.add(new ChessboardPoint(8,2));
-        trapCell.add(new ChessboardPoint(8,4));
+        grid[0][2].setOwner(PlayerColor.RED);
+        grid[0][4].setOwner(PlayerColor.RED);
+        grid[1][3].setOwner(PlayerColor.RED);
+        grid[8][2].setOwner(PlayerColor.BLUE);
+        grid[8][4].setOwner(PlayerColor.BLUE);
+        grid[7][3].setOwner(PlayerColor.BLUE);
     }
 
     private ChessPiece getChessPieceAt(ChessboardPoint point) {
@@ -135,9 +139,7 @@ public class Chessboard {
     public void captureChessPiece(ChessboardPoint src, ChessboardPoint dest) {
         if (!isValidCapture(src, dest)) {
             throw new IllegalArgumentException("Illegal chess capture!");
-        }
-        else
-        {
+        } else {
             removeChessPiece(dest);
             setChessPiece(dest, removeChessPiece(src));
         }
@@ -147,6 +149,7 @@ public class Chessboard {
     public Cell[][] getGrid() {
         return grid;
     }
+
     public PlayerColor getChessPieceOwner(ChessboardPoint point) {
         return getGridAt(point).getPiece().getOwner();
     }
@@ -155,104 +158,74 @@ public class Chessboard {
         if (getChessPieceAt(src) == null || getChessPieceAt(dest) != null) {
             return false;
         }
-        if(getGridAt(dest).getType()==GridType.river)
-        {
-            if(!Objects.equals(getChessPieceAt(src).getName(), "Rat"))
-            {
+        if (riverCell.contains(dest)) {
+            if (!Objects.equals(getChessPieceAt(src).getName(), "Rat")) {
                 return false;
-            }
-            else {
+            } else {
                 return calculateDistance(src, dest) == 1;
             }
         }
-        if(calculateDistance(src, dest) > 1&&( getChessPieceAt(src).getName().equals("Lion")||getChessPieceAt(src).getName().equals("Tiger")))
-        {
-            if(src.getCol()!=dest.getCol()&&src.getRow()!=dest.getRow())
-            {
+        if (calculateDistance(src, dest) > 1 && (getChessPieceAt(src).getName().equals("Lion") || getChessPieceAt(src).getName().equals("Tiger"))) {
+            if (src.getCol() != dest.getCol() && src.getRow() != dest.getRow()) {
                 return false;
             }
-            if(src.getCol()==dest.getCol())
-            {
-                if(src.getRow()>dest.getRow())
-                {
-                    for(int i=dest.getRow()+1;i<src.getRow();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(i,src.getCol())).getType()!=GridType.river)
-                        {
+            if (src.getCol() == dest.getCol()) {
+                if (src.getRow() > dest.getRow()) {
+                    for (int i = dest.getRow() + 1; i < src.getRow(); i++) {
+                        if (getGridAt(new ChessboardPoint(i, src.getCol())).getType() != GridType.river) {
                             return false;
                         }
                     }
                 }
-                if(src.getRow()<dest.getRow())
-                {
-                    for(int i=src.getRow()+1;i<dest.getRow();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(i,src.getCol())).getType()!=GridType.river)
-                        {
+                if (src.getRow() < dest.getRow()) {
+                    for (int i = src.getRow() + 1; i < dest.getRow(); i++) {
+                        if (getGridAt(new ChessboardPoint(i, src.getCol())).getType() != GridType.river) {
+                            return false;
+                        }
+
+                    }
+                }
+                if (src.getRow() < dest.getRow()) {
+                    for (int i = src.getRow() + 1; i < dest.getRow(); i++) {
+                        if (getGridAt(new ChessboardPoint(i, src.getCol())).getPiece() != null) {
                             return false;
                         }
                     }
                 }
-                if(src.getRow()<dest.getRow())
-                {
-                    for(int i=src.getRow()+1;i<dest.getRow();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(i,src.getCol())).getPiece()!=null)
-                        {
-                            return false;
-                        }
-                    }
-                }
-                if(src.getRow()>dest.getRow())
-                {
-                    for(int i=dest.getRow()+1;i<src.getRow();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(i,src.getCol())).getPiece()!=null)
-                        {
+                if (src.getRow() > dest.getRow()) {
+                    for (int i = dest.getRow() + 1; i < src.getRow(); i++) {
+                        if (getGridAt(new ChessboardPoint(i, src.getCol())).getPiece() != null) {
                             return false;
                         }
                     }
                 }
                 return true;
             }
-            if(src.getRow()==dest.getRow())
-            {
-                if(src.getCol()>dest.getCol())
-                {
-                    for(int i=dest.getCol()+1;i<src.getCol();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(src.getRow(),i)).getType()!=GridType.river)
-                        {
+            if (src.getRow() == dest.getRow()) {
+                if (src.getCol() > dest.getCol()) {
+                    for (int i = dest.getCol() + 1; i < src.getCol(); i++) {
+                        if (getGridAt(new ChessboardPoint(src.getRow(), i)).getType() != GridType.river) {
                             return false;
                         }
                     }
                 }
-                if(src.getCol()<dest.getCol())
-                {
-                    for(int i=src.getCol()+1;i<dest.getCol();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(src.getRow(),i)).getType()!=GridType.river)
-                        {
+                if (src.getCol() < dest.getCol()) {
+                    for (int i = src.getCol() + 1; i < dest.getCol(); i++) {
+                        if (getGridAt(new ChessboardPoint(src.getRow(), i)).getType() != GridType.river) {
                             return false;
                         }
                     }
                 }
-                if(src.getCol()<dest.getCol())
-                {
-                    for(int i=src.getCol()+1;i<dest.getCol();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(src.getRow(),i)).getPiece()!=null)
-                        {
+                if (src.getCol() < dest.getCol()) {
+                    for (int i = src.getCol() + 1; i < dest.getCol(); i++) {
+                        if (getGridAt(new ChessboardPoint(src.getRow(), i)).getPiece() != null) {
                             return false;
                         }
                     }
                 }
-                if(src.getCol()>dest.getCol())
-                {
-                    for(int i=dest.getCol()+1;i<src.getCol();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(src.getRow(),i)).getPiece()!=null)
-                        {
+                if (src.getCol() > dest.getCol()) {
+                    for (int i = dest.getCol() + 1; i < src.getCol(); i++) {
+                        if (getGridAt(new ChessboardPoint(src.getRow(), i)).getPiece() != null) {
                             return false;
                         }
                     }
@@ -260,13 +233,24 @@ public class Chessboard {
                 return true;
             }
         }
-    if(getGridAt(dest).getType()==GridType.den&&getGridAt(dest).getOwner()!=getChessPieceAt(src).getOwner())
-    {
-     return false;
-    }
 
+        if (getGridAt(dest).getType() == GridType.den && getGridAt(dest).getOwner() ==getChessPieceAt(src).getOwner() ) {
+            return false;
+        }
+        else if(getGridAt(dest).getType() == GridType.den && getGridAt(dest).getOwner() !=getChessPieceAt(src).getOwner())
+        {
+            return true;
+        }
+        if (getGridAt(dest).getType() == GridType.trap && getGridAt(dest).getOwner() ==getChessPieceAt(src).getOwner() ) {
+            return false;
+        }
+        else if(getGridAt(dest).getType() == GridType.trap && getGridAt(dest).getOwner() !=getChessPieceAt(src).getOwner())
+        {
+            return true;
+        }
         return calculateDistance(src, dest) == 1;
     }
+
     public boolean isValidCapture(ChessboardPoint src, ChessboardPoint dest) {
         // TODO:Fix this method
         ChessPiece srcPiece = getChessPieceAt(src);
@@ -277,98 +261,69 @@ public class Chessboard {
         if (srcPiece.getOwner() == destPiece.getOwner()) {
             return false;
         }
-        if(getGridAt(dest).getType()==GridType.river||getGridAt(src).getType()==GridType.river)
-        {
+        if (getGridAt(dest).getType() == GridType.river || getGridAt(src).getType() == GridType.river) {
             return false;
         }
-        if(calculateDistance(src, dest) > 1&&( getChessPieceAt(src).getName().equals("Lion")||getChessPieceAt(src).getName().equals("Tiger")))
-        {
-            if(src.getCol()!=dest.getCol()&&src.getRow()!=dest.getRow())
-            {
+        if (calculateDistance(src, dest) > 1 && (getChessPieceAt(src).getName().equals("Lion") || getChessPieceAt(src).getName().equals("Tiger"))) {
+            if (src.getCol() != dest.getCol() && src.getRow() != dest.getRow()) {
                 return false;
             }
-            if(src.getCol()==dest.getCol())
-            {
-                if(src.getRow()>dest.getRow())
-                {
-                    for(int i=dest.getRow()+1;i<src.getRow();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(i,src.getCol())).getType()!=GridType.river)
-                        {
+            if (src.getCol() == dest.getCol()) {
+                if (src.getRow() > dest.getRow()) {
+                    for (int i = dest.getRow() + 1; i < src.getRow(); i++) {
+                        if (getGridAt(new ChessboardPoint(i, src.getCol())).getType() != GridType.river) {
                             return false;
                         }
                     }
                 }
-                if(src.getRow()<dest.getRow())
-                {
-                    for(int i=src.getRow()+1;i<dest.getRow();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(i,src.getCol())).getType()!=GridType.river)
-                        {
+                if (src.getRow() < dest.getRow()) {
+                    for (int i = src.getRow() + 1; i < dest.getRow(); i++) {
+                        if (getGridAt(new ChessboardPoint(i, src.getCol())).getType() != GridType.river) {
                             return false;
                         }
                     }
                 }
-                if(src.getRow()<dest.getRow())
-                {
-                    for(int i=src.getRow()+1;i<dest.getRow();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(i,src.getCol())).getPiece()!=null)
-                        {
+                if (src.getRow() < dest.getRow()) {
+                    for (int i = src.getRow() + 1; i < dest.getRow(); i++) {
+                        if (getGridAt(new ChessboardPoint(i, src.getCol())).getPiece() != null) {
                             return false;
                         }
                     }
                 }
-                if(src.getRow()>dest.getRow())
-                {
-                    for(int i=dest.getRow()+1;i<src.getRow();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(i,src.getCol())).getPiece()!=null)
-                        {
+                if (src.getRow() > dest.getRow()) {
+                    for (int i = dest.getRow() + 1; i < src.getRow(); i++) {
+                        if (getGridAt(new ChessboardPoint(i, src.getCol())).getPiece() != null) {
                             return false;
                         }
                     }
                 }
                 return srcPiece.canCapture(destPiece);
             }
-            if(src.getRow()==dest.getRow())
-            {
-                if(src.getCol()>dest.getCol())
-                {
-                    for(int i=dest.getCol()+1;i<src.getCol();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(src.getRow(),i)).getType()!=GridType.river)
-                        {
+            if (src.getRow() == dest.getRow()) {
+                if (src.getCol() > dest.getCol()) {
+                    for (int i = dest.getCol() + 1; i < src.getCol(); i++) {
+                        if (getGridAt(new ChessboardPoint(src.getRow(), i)).getType() != GridType.river) {
                             return false;
                         }
                     }
                 }
-                if(src.getCol()<dest.getCol())
-                {
-                    for(int i=src.getCol()+1;i<dest.getCol();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(src.getRow(),i)).getType()!=GridType.river)
-                        {
+                if (src.getCol() < dest.getCol()) {
+                    for (int i = src.getCol() + 1; i < dest.getCol(); i++) {
+                        if (getGridAt(new ChessboardPoint(src.getRow(), i)).getType() != GridType.river) {
                             return false;
                         }
                     }
                 }
-                if(src.getCol()<dest.getCol())
-                {
-                    for(int i=src.getCol()+1;i<dest.getCol();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(src.getRow(),i)).getPiece()!=null)
-                        {
+                if (src.getCol() < dest.getCol()) {
+                    for (int i = src.getCol() + 1; i < dest.getCol(); i++) {
+                        if (getGridAt(new ChessboardPoint(src.getRow(), i)).getPiece() != null) {
                             return false;
                         }
                     }
                 }
-                if(src.getCol()>dest.getCol())
-                {
-                    for(int i=dest.getCol()+1;i<src.getCol();i++)
-                    {
-                        if(getGridAt(new ChessboardPoint(src.getRow(),i)).getPiece()!=null)
-                        {
+                if (src.getCol() > dest.getCol()) {
+                    for (int i = dest.getCol() + 1; i < src.getCol(); i++) {
+                        if (getGridAt(new ChessboardPoint(src.getRow(), i)).getPiece() != null) {
                             return false;
                         }
                     }
@@ -376,11 +331,13 @@ public class Chessboard {
                 return srcPiece.canCapture(destPiece);
             }
         }
-        return calculateDistance(src,dest)==1&&srcPiece.canCapture(destPiece);
+        return calculateDistance(src, dest) == 1 && srcPiece.canCapture(destPiece);
     }
+
     public void getTrapped(ChessboardPoint point) {
         getGridAt(point).getPiece().setRank(0);
     }
+
     public void solveTrap(ChessboardPoint selectedPoint, ChessboardPoint destPoint) {
         if (getGridAt(destPoint).getType() == GridType.trap && getGridAt(destPoint).getOwner() != getChessPieceAt(selectedPoint).getOwner()) {
             getTrapped(selectedPoint);
@@ -388,6 +345,7 @@ public class Chessboard {
             exitTrap(selectedPoint);
         }
     }
+
     public void exitTrap(ChessboardPoint point) {
         switch (getGridAt(point).getPiece().getName()) {
             case "Rat":
@@ -416,24 +374,38 @@ public class Chessboard {
                 break;
         }
     }
-    public void runStep(Step step){
+
+    public void runStep(Step step) {
         ChessboardPoint fromPoint = step.getFrom();
         ChessboardPoint toPoint = step.getTo();
         ChessPiece fromPiece = step.getFromChessPiece();
         setChessPiece(fromPoint, null);
         setChessPiece(toPoint, fromPiece);
     }
-    public Step recordStep(ChessboardPoint fromPoint, ChessboardPoint toPoint, PlayerColor currentPlayer, int turn){
+
+    public Step recordStep(ChessboardPoint fromPoint, ChessboardPoint toPoint, PlayerColor currentPlayer, int turn) {
         ChessPiece fromPiece = getChessPieceAt(fromPoint);
         ChessPiece toPiece = getChessPieceAt(toPoint);
         Step step = new Step(fromPoint, toPoint, fromPiece, toPiece, currentPlayer, turn);
 //        System.out.println(step);
         return step;
     }
+
     public boolean solveDens(ChessboardPoint destPoint) {
         if (getGridAt(destPoint).getType() == GridType.den) {
             return true;
         }
         return false;
+    }
+
+    public boolean isAllCaptured(PlayerColor playerColor) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (getChessPieceAt(new ChessboardPoint(i, j)) != null && getChessPieceAt(new ChessboardPoint(i, j)).getOwner() == playerColor) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -19,14 +19,18 @@ public class ChessPiece {
 
     public boolean canCapture(ChessPiece target) {
         // TODO: Finish this method!
-        if(this.getOwner()==target.getOwner()) return false;
-        if(this.rank>=target.rank&& !Objects.equals(this.name, "rat") && !Objects.equals(target.name, "elephant"))
-        {
+        if (target.getOwner() == this.owner){
+            return false;
+        }
+        if (this.name.equals("Elephant") && target.name.equals("Rat")){
+            return false;
+        }
+        if (this.name.equals("Rat") && target.name.equals("Elephant")){
             return true;
         }
-        if(Objects.equals(this.name, "rat") &&target.name=="elephant") return true;
-        if(Objects.equals(this.name, "elephant") &&target.name=="rat") return false;
-
+        if (this.rank >= target.rank) {
+            return true;
+        }
         return false;
     }
     public void setRank(int rank){
@@ -36,7 +40,6 @@ public class ChessPiece {
     {
         return rank;
     }
-
 
     public String getName() {
         return name;

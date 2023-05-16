@@ -1,7 +1,5 @@
 package view;
 
-import model.CellType;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -24,7 +22,6 @@ public class CellComponent extends JPanel {
         setLocation(location);
         setSize(size, size);
         this.background = background;
-
     }
 
     @Override

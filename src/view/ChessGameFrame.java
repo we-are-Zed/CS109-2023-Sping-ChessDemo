@@ -109,6 +109,31 @@ public class ChessGameFrame extends JFrame {
         undoButton.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(undoButton);
     }
+//    private void addChangeThemeButton() {
+//        JButton button = new JButton("Change Theme");
+//        button.setLocation(HEIGHT, HEIGHT / 10 + 518);
+//        button.setSize(180, 54);
+//        button.setFont(new Font("Rockwell", Font.BOLD, 16));
+//        add(button);
+//
+//        button.addActionListener(e -> {
+//            System.out.println("Click change theme");
+//            view.changeTheme(isSpring);
+//            if (isSpring){
+//                remove(background);
+//                isSpring = false;
+//                background = autumnBG;
+//                add(background);
+//            } else {
+//                remove(background);
+//                isSpring = true;
+//                background = springBG;
+//                add(background);
+//            }
+//            repaint();
+//            revalidate();
+//        });
+//    }
     private void addUndoButton() {
         JButton undoButton = new JButton("Undo");
         undoButton.addActionListener((e) ->
