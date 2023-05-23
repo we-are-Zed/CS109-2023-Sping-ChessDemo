@@ -112,6 +112,10 @@ public class GameController implements GameListener {
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor();
+            if(currentPlayer==PlayerColor.BLUE)
+            {
+                turnCount++;
+            }
             view.repaint();
         }
         //if the chess enter Dens or Traps
@@ -147,6 +151,10 @@ public class GameController implements GameListener {
                 view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
                 selectedPoint = null;
                 swapColor();
+                if(currentPlayer==PlayerColor.BLUE)
+                {
+                    turnCount++;
+                }
                 view.repaint();
             }
             // TODO: Implement capture function
