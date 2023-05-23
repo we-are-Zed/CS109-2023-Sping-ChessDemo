@@ -16,7 +16,6 @@ public class CatChessComponent extends AnimalChessComponent {
 
     public CatChessComponent(PlayerColor owner, int size) {
         super(owner,size);
-
     }
 
     @Override

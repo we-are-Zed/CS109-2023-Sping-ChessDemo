@@ -23,17 +23,24 @@ public class ChessboardComponent extends JComponent {
     private final Set<ChessboardPoint> riverCell = new HashSet<>();
     private final Set<ChessboardPoint> trapCell = new HashSet<>();
     private final Set<ChessboardPoint> denCell = new HashSet<>();
+    private Saver saver;
 
-    public Color DayGrass = new Color(120,204,0);
-    public Color NightGrass = new Color(5,88,37);
-    public Color DayRiver =  new Color(114,218,210);
-    public Color NightRiver =  new Color(8,127,152);
-    public Color DayTrap =  new Color(245, 105, 105);
-    public Color NightTrap =  new Color(131, 17, 17);
+    public Color DayGrass = new Color(238,197,145);
+    public Color NightGrass = new Color(205,170,125);
+    public Color DayRiver =  new Color(187,255,255);
+    public Color NightRiver =  new Color(150,205,205);
+    public Color DayTrap =  new Color(255,106,106);
+    public Color NightTrap =  new Color(205,85,85);
     public Color DayDen =  new Color(192, 192, 192);
     public Color NightDen =  new Color(100, 100, 100);
 
     private GameController gameController;
+
+    public GameController getGameController(){return gameController;}
+    public void setGameController(GameController gameController){this.gameController = gameController;}
+    public void setSaver(Saver saver){this.saver = saver;}
+    public Saver getSaver(){return saver;}
+
 
     public ChessboardComponent(int chessSize) {
         CHESS_SIZE = chessSize;
@@ -54,6 +61,13 @@ public class ChessboardComponent extends JComponent {
      */
     public void initiateChessComponent(Chessboard chessboard) {
         Cell[][] grid = chessboard.getGrid();//就是chessboard里的grid，只是不想用get写
+
+        // Clear all the chess components
+        for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
+            for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
+                gridComponents[i][j].removeAll();
+            }
+        }
 
         for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
@@ -110,6 +124,16 @@ public class ChessboardComponent extends JComponent {
 
         denCell.add(new ChessboardPoint(0,3));
         denCell.add(new ChessboardPoint(8,3));
+
+        //清空所有的格子
+        for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
+            for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
+                if (gridComponents[i][j] != null) {
+                    this.remove(gridComponents[i][j]);
+                    gridComponents[i][j] = null;
+                }
+            }
+        }
 
         for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
@@ -181,6 +205,32 @@ public class ChessboardComponent extends JComponent {
                 gameController.onPlayerClickChessPiece(getChessboardPoint(e.getPoint()), (AnimalChessComponent) clickedComponent.getComponents()[0]);
             }
         }
+    }
+
+    public void changeTheme(boolean isDay){
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 7; j++){
+                if(gridComponents[i][j].background == DayGrass){
+                    gridComponents[i][j].background = NightGrass;
+                }else if (gridComponents[i][j].background == DayRiver){
+                    gridComponents[i][j].background = NightRiver;
+                }else if (gridComponents[i][j].background == DayTrap){
+                    gridComponents[i][j].background = NightTrap;
+                }else if (gridComponents[i][j].background == DayDen){
+                    gridComponents[i][j].background = NightDen;
+                }else if(gridComponents[i][j].background == NightGrass){
+                    gridComponents[i][j].background = DayGrass;
+                }else if(gridComponents[i][j].background == NightRiver){
+                    gridComponents[i][j].background = DayRiver;
+                }else if(gridComponents[i][j].background == NightTrap){
+                    gridComponents[i][j].background = DayTrap;
+                }else if(gridComponents[i][j].background == NightDen){
+                    gridComponents[i][j].background = DayDen;
+                }
+            }
+        }
+        repaint();
+        revalidate();
     }
 
 }

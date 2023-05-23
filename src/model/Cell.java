@@ -14,13 +14,13 @@ public class Cell implements Serializable {
         this.type=type;
         this.piece = null;
     }
+
     public void setOwner(PlayerColor owner){
         this.owner=owner;
     }
     public GridType getType() {
         return type;
     }
-
     public void setType(GridType type) {
         this.type = type;
     }

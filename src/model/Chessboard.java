@@ -1,9 +1,15 @@
 package model;
 
 import model.GridType;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import static model.Constant.CHESSBOARD_COL_SIZE;
+import static model.Constant.CHESSBOARD_ROW_SIZE;
+
 
 /**
  * This class store the real chess information.
@@ -11,6 +17,7 @@ import java.util.Set;
  */
 public class Chessboard {
     public Cell[][] grid;
+    public ArrayList<Step> steps;
     public final Set<ChessboardPoint> riverCell = new HashSet<>();
     public final Set<ChessboardPoint> denCell = new HashSet<>();
     public final Set<ChessboardPoint> trapCell = new HashSet<>();
@@ -23,6 +30,12 @@ public class Chessboard {
         initPieces();
     }
     public void initPieces() {
+        for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
+            for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
+                grid[i][j].removePiece();
+            }
+        }
+
         grid[6][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Elephant", 8));
         grid[6][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Wolf", 4));
         grid[6][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Leopard", 5));

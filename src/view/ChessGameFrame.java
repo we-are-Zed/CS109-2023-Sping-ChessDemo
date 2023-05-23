@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameController;
+import model.Saver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +21,9 @@ public class ChessGameFrame extends JFrame {
     private final int ONE_CHESS_SIZE;
 
     private ChessboardComponent chessboardComponent;
+    public boolean isDay;
+    JLabel background;
+    private String[] bgPaths = {"day.png", "night.png"};
     public ChessboardComponent getChessboardComponent() {
         return chessboardComponent;
     }
@@ -37,6 +41,7 @@ public class ChessGameFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
         setLayout(null);
 
+        isDay = true;
 
         addChessboard();
         addTurnLabel();
@@ -46,6 +51,7 @@ public class ChessGameFrame extends JFrame {
         addRestartButton();
         addSaveButton();
         addLoadButton();
+        addBackgroundImage();
     }
 
 
@@ -60,80 +66,69 @@ public class ChessGameFrame extends JFrame {
     /**
      * 在游戏面板中添加背景
      */
-//    private void addBackgroundImage() {
-//        URL defaultPath = getClass().getResource(bgPaths[0]);
-//        mainPanel = new ImagePanel(defaultPath);
-//        setContentPane(mainPanel);
-//        mainPanel.setLayout(null);
-//    }
-//    public void setBackgroundImage(int index) {
-//        URL path = getClass().getResource(bgPaths[index - 1]);
-//        mainPanel.setBackgroundImage(path);
-//        mainPanel.repaint();
-//    }
+    private void addBackgroundImage() {
+        Image bg1 = new ImageIcon("resource/bg3.png").getImage();
+        bg1 = bg1.getScaledInstance(1100, 810,Image.SCALE_DEFAULT);
+        ImageIcon icon1 = new ImageIcon(bg1);
+        JLabel bg = new JLabel(icon1);
+        bg.setSize(1100, 810);
+        bg.setLocation(0, 0);
+
+        background = bg;
+        add(background);
+    }
 
     /**
      * 在游戏面板中添加标签
      */
     private void addTurnLabel() {
-        JLabel statusLabel = new JLabel("TURN 1: Blue");
-        statusLabel.setLocation(1, 1);
+        JLabel statusLabel = new JLabel("START THE GAME");
+        statusLabel.setLocation(2, 2);
         statusLabel.setSize(200, 60);
         statusLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
+        statusLabel.setForeground(Color.GRAY);
         add(statusLabel);
     }
     private void addTimeLabel() {
-        JLabel timeLabel = new JLabel("TIME: 00:00");
+        JLabel timeLabel = new JLabel("TIME: ");
         timeLabel.setLocation(WIDTH - 150, 1);
         timeLabel.setSize(200, 60);
         timeLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
+        timeLabel.setForeground(Color.GRAY);
         add(timeLabel);
+//        int delay = 1000; // 1 second
+//        ActionListener taskPerformer = new ActionListener() {
+//            public void actionPerformed(ActionEvent evt) {
+//                System.out.println("Timer tick");
+//            }
+//        };
+//        Timer timer = new Timer(delay, taskPerformer);
+//        timer.start();
     }
 
     /**
      * 在游戏面板中增加一个按钮，如果按下的话就会显示Hello, world!
      */
     private void addThemeButton() {
-        JButton undoButton = new JButton("Theme");
-        undoButton.addActionListener((e) ->
-                JOptionPane.showMessageDialog(this, "THeme"));
-//        SettingButton.addActionListener(e -> {
-//            System.out.println("Click setting");
-//            SwingUtilities.invokeLater(() -> {
-//                SettingGameFrame settingFrame = new SettingGameFrame(500, 750, this);
-//                settingFrame.setVisible(true);
-//            });
-//        });
-        undoButton.setLocation(HEIGTH, HEIGTH / 10 + 30);
-        undoButton.setSize(150, 60);
-        undoButton.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(undoButton);
+        JButton themeButton = new JButton("Theme");
+        themeButton.setLocation(HEIGTH, HEIGTH / 10 + 30);
+        themeButton.setSize(150, 60);
+        themeButton.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(themeButton);
+
+        themeButton.addActionListener(e -> {
+            System.out.println("Click to change theme");
+            chessboardComponent.changeTheme(isDay);
+            if (isDay){
+                isDay = false;
+            }else{
+                isDay = true;
+            }
+            repaint();
+            revalidate();
+        });
     }
-//    private void addChangeThemeButton() {
-//        JButton button = new JButton("Change Theme");
-//        button.setLocation(HEIGHT, HEIGHT / 10 + 518);
-//        button.setSize(180, 54);
-//        button.setFont(new Font("Rockwell", Font.BOLD, 16));
-//        add(button);
-//
-//        button.addActionListener(e -> {
-//            System.out.println("Click change theme");
-//            view.changeTheme(isSpring);
-//            if (isSpring){
-//                remove(background);
-//                isSpring = false;
-//                background = autumnBG;
-//                add(background);
-//            } else {
-//                remove(background);
-//                isSpring = true;
-//                background = springBG;
-//                add(background);
-//            }
-//            repaint();
-//            revalidate();
-//        });
-//    }
+
     private void addUndoButton() {
         JButton undoButton = new JButton("Undo");
         undoButton.addActionListener((e) ->
@@ -149,31 +144,41 @@ public class ChessGameFrame extends JFrame {
     private void addRestartButton() {
         JButton restartButton = new JButton("Restart");
         restartButton.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Restart"));
-//        RestartButton.addActionListener(e -> {
-//                    System.out.println("Click restart");
-//                    chessboardComponent.getGameController().restart();
         restartButton.setLocation(HEIGTH, HEIGTH / 10 + 390);
         restartButton.setSize(150, 60);
         restartButton.setFont(new Font("Rockwell", Font.BOLD, 20));
+        restartButton.addActionListener(e -> {
+            System.out.println("Click restart");
+            chessboardComponent.getGameController().restart();});
         add(restartButton);
     }
+
+
     private void addSaveButton() {
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Save"));
-//        SaveButton.addActionListener(e -> {
-//            System.out.println("Click save");
-//            chessboardComponent.getGameController().save();
         saveButton.setLocation(HEIGTH, HEIGTH / 10 + 470);
         saveButton.setSize(150, 60);
         saveButton.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(saveButton);
+
+        saveButton.addActionListener(e -> {
+            System.out.println("Click save");
+            String path = JOptionPane.showInputDialog("存档名");
+            while (path.equals("")){
+                JOptionPane.showMessageDialog(null, "存档名不能为空");
+                path = JOptionPane.showInputDialog("存档名");
+            }
+            chessboardComponent.getSaver().Save(path);
+        });
     }
+
     private void addLoadButton() {
         JButton loadButton = new JButton("Load");
         loadButton.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Load"));
-//        LoadButton.addActionListener(e -> {
-//                    System.out.println("Click load");
-//                    chessboardComponent.getGameController().load();
+        loadButton.addActionListener(e -> {
+                    System.out.println("Click load");
+                    chessboardComponent.getGameController().Load();});
         loadButton.setLocation(HEIGTH, HEIGTH / 10 + 550);
         loadButton.setSize(150, 60);
         loadButton.setFont(new Font("Rockwell", Font.BOLD, 20));
