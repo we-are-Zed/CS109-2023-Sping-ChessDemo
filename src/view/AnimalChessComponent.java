@@ -16,7 +16,6 @@ public class AnimalChessComponent extends JComponent{
         setLocation(0,0);
         setVisible(true);
     }
-
     public PlayerColor getOwner() {
         return owner;
     }

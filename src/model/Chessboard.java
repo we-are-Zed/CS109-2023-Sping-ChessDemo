@@ -53,6 +53,13 @@ public class Chessboard {
         grid[1][5].setPiece(new ChessPiece(PlayerColor.RED, "Cat", 2));
         grid[0][0].setPiece(new ChessPiece(PlayerColor.RED, "Lion", 7));
         grid[0][6].setPiece(new ChessPiece(PlayerColor.RED, "Tiger", 6));
+
+        grid[0][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
+        grid[0][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
+        grid[8][2].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
+        grid[8][4].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
+        grid[1][3].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
+        grid[7][3].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
     }
     private void initSets() {
         riverCell.add(new ChessboardPoint(3, 1));

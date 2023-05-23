@@ -90,6 +90,8 @@ public class ChessboardComponent extends JComponent {
                         gridComponents[i][j].add(new CatChessComponent(chessPiece.getOwner(), CHESS_SIZE));
                     }else if(grid[i][j].getPiece().getName().equals("Rat")){
                         gridComponents[i][j].add(new RatChessComponent(chessPiece.getOwner(), CHESS_SIZE));
+                    }else if(grid[i][j].getPiece().getName().equals("Trap")){
+                        gridComponents[i][j].add(new TrapChessComponent(chessPiece.getOwner(), CHESS_SIZE));
                     }
 
                 }
