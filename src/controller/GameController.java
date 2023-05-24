@@ -121,10 +121,12 @@ public class GameController implements GameListener {
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {//如果有选中的棋子，且移动合法
             model.moveChessPiece(selectedPoint, point);
+            Step step = model.recordStep(selectedPoint, point, currentPlayer, turnCount);
+            stepList.add(step);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor();
-            if(currentPlayer==PlayerColor.BLUE)
+            if(currentPlayer==PlayerColor.RED)
             {
                 turnCount++;
             }
@@ -163,7 +165,11 @@ public class GameController implements GameListener {
                 view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
                 selectedPoint = null;
                 swapColor();
-                if(currentPlayer==PlayerColor.BLUE)
+
+                Step step = model.recordStep(selectedPoint, point, currentPlayer, turnCount);
+                stepList.add(step);
+
+                if(currentPlayer==PlayerColor.RED)
                 {
                     turnCount++;
                 }
