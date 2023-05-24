@@ -2,10 +2,7 @@ package model;
 
 import model.GridType;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static model.Constant.CHESSBOARD_COL_SIZE;
 import static model.Constant.CHESSBOARD_ROW_SIZE;
@@ -407,7 +404,6 @@ public class Chessboard {
         ChessPiece fromPiece = getChessPieceAt(fromPoint);
         ChessPiece toPiece = getChessPieceAt(toPoint);
         Step step = new Step(fromPoint, toPoint, fromPiece, toPiece, currentPlayer, turn);
-//        System.out.println(step);
         return step;
     }
 
@@ -427,5 +423,43 @@ public class Chessboard {
             }
         }
         return true;
+    }
+    public List<Step> getLegalMove(PlayerColor color)
+    {
+        List<ChessboardPoint> legalMove = getValidPoints(color);
+        List<Step> steps = new ArrayList<>();
+        for(ChessboardPoint point: legalMove)
+        {
+            List<ChessboardPoint> validMoves = getValidMoves(point);
+            for(ChessboardPoint destPoint: validMoves)
+            {
+                steps.add(recordStep(point, destPoint, color, 0));
+            }
+        }
+        return steps;
+    }
+    public List<ChessboardPoint> getValidMoves(ChessboardPoint point) {
+        List<ChessboardPoint> availablePoints = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 7; j++) {
+                ChessboardPoint destPoint = new ChessboardPoint(i, j);
+                if (isValidMove(point, destPoint) || isValidCapture(point, destPoint)) {
+                    availablePoints.add(destPoint);
+                }
+            }
+        }
+        return availablePoints;
+    }
+    public List<ChessboardPoint> getValidPoints(PlayerColor color){
+        List<ChessboardPoint> availablePoints = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 7; j++) {
+                ChessboardPoint point = new ChessboardPoint(i, j);
+                if (getChessPieceAt(point) != null && getChessPieceAt(point).getOwner() == color) {
+                    availablePoints.add(point);
+                }
+            }
+        }
+        return availablePoints;
     }
 }

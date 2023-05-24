@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Controller is the connection between model and view,
@@ -27,13 +29,20 @@ public class GameController implements GameListener {
     private Chessboard model;
     private ChessboardComponent view;
     public PlayerColor currentPlayer;
+    public AI ai;
+    public Mode gameMode;
     private int turnCount = 1;
     private PlayerColor winner;
 
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
+    private List<Step> stepList;
+    private List<ChessboardPoint> validMoves;
 
     public GameController(ChessboardComponent view, Chessboard model) {
+        stepList = new LinkedList<>();
+        validMoves = new ArrayList<>();
+
         this.view = view;
         this.model = model;
         this.currentPlayer = PlayerColor.BLUE;
@@ -42,6 +51,9 @@ public class GameController implements GameListener {
         initialize();
         view.initiateChessComponent(model);
         view.repaint();
+        if(gameMode==Mode.Easy||gameMode==Mode.Difficulty){
+            ai=new AI(gameMode,model);
+        }
     }
 
     private void initialize() {
