@@ -462,4 +462,5 @@ public class Chessboard {
         }
         return availablePoints;
     }
+
 }

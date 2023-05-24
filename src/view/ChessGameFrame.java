@@ -133,9 +133,10 @@ public class ChessGameFrame extends JFrame {
         JButton undoButton = new JButton("Undo");
         undoButton.addActionListener((e) ->
                 JOptionPane.showMessageDialog(this, "Undo"));
-//        UndoButton.addActionListener(e -> {
-//                    System.out.println("Click undo");
-//                    chessboardComponent.getGameController().undo();
+        undoButton.addActionListener(e -> {
+                    System.out.println("Click undo");
+                    chessboardComponent.getGameController().undo();
+                });
         undoButton.setLocation(HEIGTH, HEIGTH / 10 + 310);
         undoButton.setSize(150, 60);
         undoButton.setFont(new Font("Rockwell", Font.BOLD, 20));
