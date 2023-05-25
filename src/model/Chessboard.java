@@ -51,12 +51,12 @@ public class Chessboard {
         grid[0][0].setPiece(new ChessPiece(PlayerColor.RED, "Lion", 7));
         grid[0][6].setPiece(new ChessPiece(PlayerColor.RED, "Tiger", 6));
 
-        grid[0][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
-        grid[0][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
-        grid[8][2].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
-        grid[8][4].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
-        grid[1][3].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
-        grid[7][3].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
+        grid[0][2].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
+        grid[0][4].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
+        grid[8][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
+        grid[8][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
+        grid[1][3].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
+        grid[7][3].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
     }
     private void initSets() {
         riverCell.add(new ChessboardPoint(3, 1));
@@ -404,6 +404,7 @@ public class Chessboard {
         ChessPiece fromPiece = getChessPieceAt(fromPoint);
         ChessPiece toPiece = getChessPieceAt(toPoint);
         Step step = new Step(fromPoint, toPoint, fromPiece, toPiece, currentPlayer, turn);
+//        System.out.println(step);
         return step;
     }
 
@@ -424,6 +425,7 @@ public class Chessboard {
         }
         return true;
     }
+
     public List<Step> getLegalMove(PlayerColor color)
     {
         List<ChessboardPoint> legalMove = getValidPoints(color);
@@ -462,5 +464,4 @@ public class Chessboard {
         }
         return availablePoints;
     }
-
 }

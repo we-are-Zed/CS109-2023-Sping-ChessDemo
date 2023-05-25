@@ -23,26 +23,27 @@ public class ChessboardComponent extends JComponent {
     private final Set<ChessboardPoint> riverCell = new HashSet<>();
     private final Set<ChessboardPoint> trapCell = new HashSet<>();
     private final Set<ChessboardPoint> denCell = new HashSet<>();
-    private Saver saver;
 
     public Color DayGrass = new Color(238,197,145);
     public Color NightGrass = new Color(205,170,125);
     public Color DayRiver =  new Color(187,255,255);
     public Color NightRiver =  new Color(150,205,205);
-    public Color DayTrap =  new Color(255,106,106);
-    public Color NightTrap =  new Color(205,85,85);
+    public Color DayTrap =  new Color(238,197,145);
+    public Color NightTrap =  new Color(205,170,125);
     public Color DayDen =  new Color(192, 192, 192);
     public Color NightDen =  new Color(100, 100, 100);
 
     private GameController gameController;
+    private ChessGameFrame chessGameFrame;
 
     public GameController getGameController(){return gameController;}
-    public void setGameController(GameController gameController){this.gameController = gameController;}
-    public void setSaver(Saver saver){this.saver = saver;}
-    public Saver getSaver(){return saver;}
 
+    public ChessGameFrame getChessGameFrame() {
+        return chessGameFrame;
+    }
 
-    public ChessboardComponent(int chessSize) {
+    public ChessboardComponent(int chessSize, ChessGameFrame chessGameFrame) {
+        this.chessGameFrame = chessGameFrame;
         CHESS_SIZE = chessSize;
         int width = CHESS_SIZE * 7;
         int height = CHESS_SIZE * 9;

@@ -1,11 +1,15 @@
 package view;
 
 import controller.GameController;
-import model.Saver;
+import model.PlayerColor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 //import view.ImagePanel;
 
 /**
@@ -23,6 +27,8 @@ public class ChessGameFrame extends JFrame {
     private ChessboardComponent chessboardComponent;
     public boolean isDay;
     JLabel background;
+    JLabel statusLabel ;
+    JLabel timeLabel ;
     private String[] bgPaths = {"day.png", "night.png"};
     public ChessboardComponent getChessboardComponent() {
         return chessboardComponent;
@@ -59,7 +65,7 @@ public class ChessGameFrame extends JFrame {
      * 在游戏面板中添加棋盘
      */
     private void addChessboard() {
-        chessboardComponent = new ChessboardComponent(ONE_CHESS_SIZE);
+        chessboardComponent = new ChessboardComponent(ONE_CHESS_SIZE,this);
         chessboardComponent.setLocation(HEIGTH / 5, HEIGTH / 10);
         add(chessboardComponent);
     }
@@ -81,30 +87,56 @@ public class ChessGameFrame extends JFrame {
     /**
      * 在游戏面板中添加标签
      */
-    private void addTurnLabel() {
-        JLabel statusLabel = new JLabel("START THE GAME");
+    public void addTurnLabel() {
+        statusLabel = new JLabel("TURN 1 : BLUE");
         statusLabel.setLocation(2, 2);
         statusLabel.setSize(200, 60);
         statusLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
         statusLabel.setForeground(Color.GRAY);
         add(statusLabel);
     }
-    private void addTimeLabel() {
-        JLabel timeLabel = new JLabel("TIME: ");
+    public void getTurnLabel(PlayerColor p, int turnCount){
+        String s ;
+        int turn = turnCount + 1;
+        if(p == PlayerColor.BLUE){
+            s = "BLUE";
+        }else {
+            s = "RED";
+        }
+        statusLabel.setText("TURN " + turnCount + " : " + s);
+    }
+    //timer
+    public void addTimeLabel() {
+        timeLabel = new JLabel("00:00");
         timeLabel.setLocation(WIDTH - 150, 1);
         timeLabel.setSize(200, 60);
-        timeLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
+        timeLabel.setFont(new Font("Rockwell", Font.BOLD, 30));
         timeLabel.setForeground(Color.GRAY);
         add(timeLabel);
-//        int delay = 1000; // 1 second
-//        ActionListener taskPerformer = new ActionListener() {
-//            public void actionPerformed(ActionEvent evt) {
-//                System.out.println("Timer tick");
-//            }
-//        };
-//        Timer timer = new Timer(delay, taskPerformer);
-//        timer.start();
+
     }
+    public void getTime(String s){
+        timeLabel.setText(s);
+    }
+    //        Timer timeAction = new Timer(1000, new ActionListener() {
+//            long timemillis2 = (System.currentTimeMillis()-1000);
+//            public void actionPerformed(ActionEvent e) {
+//
+//                long timemillis1 = System.currentTimeMillis();
+//
+//                long timemillis = timemillis1-timemillis2;
+//
+//                // 转换日期显示格式
+//                SimpleDateFormat df = new SimpleDateFormat("mm:ss");
+//                timeLabel.setText(df.format(new Date(timemillis)));
+//            }
+//        });
+//        timeLabel.setLocation(WIDTH - 150, 1);
+//        timeLabel.setSize(200, 60);
+//        timeLabel.setFont(new Font("Rockwell", Font.BOLD, 30));
+//        timeLabel.setForeground(Color.GRAY);
+//
+//        timeAction.start();
 
     /**
      * 在游戏面板中增加一个按钮，如果按下的话就会显示Hello, world!
@@ -133,10 +165,9 @@ public class ChessGameFrame extends JFrame {
         JButton undoButton = new JButton("Undo");
         undoButton.addActionListener((e) ->
                 JOptionPane.showMessageDialog(this, "Undo"));
-        undoButton.addActionListener(e -> {
-                    System.out.println("Click undo");
-                    chessboardComponent.getGameController().undo();
-                });
+//        UndoButton.addActionListener(e -> {
+//                    System.out.println("Click undo");
+//                    chessboardComponent.getGameController().undo();
         undoButton.setLocation(HEIGTH, HEIGTH / 10 + 310);
         undoButton.setSize(150, 60);
         undoButton.setFont(new Font("Rockwell", Font.BOLD, 20));
@@ -158,28 +189,21 @@ public class ChessGameFrame extends JFrame {
     private void addSaveButton() {
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Save"));
+//        saveButton.addActionListener(e -> {
+//            System.out.println("Click save");
+//            chessboardComponent.Save();});
         saveButton.setLocation(HEIGTH, HEIGTH / 10 + 470);
         saveButton.setSize(150, 60);
         saveButton.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(saveButton);
-
-        saveButton.addActionListener(e -> {
-            System.out.println("Click save");
-            String path = JOptionPane.showInputDialog("存档名");
-            while (path.equals("")){
-                JOptionPane.showMessageDialog(null, "存档名不能为空");
-                path = JOptionPane.showInputDialog("存档名");
-            }
-            chessboardComponent.getSaver().Save(path);
-        });
     }
 
     private void addLoadButton() {
         JButton loadButton = new JButton("Load");
         loadButton.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Load"));
         loadButton.addActionListener(e -> {
-                    System.out.println("Click load");
-                    chessboardComponent.getGameController().Load();});
+            System.out.println("Click load");
+            chessboardComponent.getGameController().Load();});
         loadButton.setLocation(HEIGTH, HEIGTH / 10 + 550);
         loadButton.setSize(150, 60);
         loadButton.setFont(new Font("Rockwell", Font.BOLD, 20));

@@ -4,17 +4,23 @@ package controller;
 import listener.GameListener;
 import model.*;
 import view.CellComponent;
+import view.ChessGameFrame;
 import view.ChessboardComponent;
 import view.AnimalChessComponent;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
 
 /**
  * Controller is the connection between model and view,
@@ -29,13 +35,15 @@ public class GameController implements GameListener {
     private Chessboard model;
     private ChessboardComponent view;
     public PlayerColor currentPlayer;
+    public int turnCount = 1;
+    private PlayerColor winner;
     public AI ai;
     public Mode gameMode;
-    private int turnCount = 1;
-    private PlayerColor winner;
 
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
+
+    final String[] s0 = new String[1];
     private List<Step> stepList;
     private List<ChessboardPoint> validMoves;
 
@@ -51,6 +59,7 @@ public class GameController implements GameListener {
         initialize();
         view.initiateChessComponent(model);
         view.repaint();
+        timer();
         if(gameMode==Mode.Easy||gameMode==Mode.Difficulty){
             ai=new AI(gameMode,model);
         }
@@ -64,9 +73,39 @@ public class GameController implements GameListener {
     }
 
     // after a valid move swap the player
-    private void swapColor() {
+    public void swapColor() {
         currentPlayer = currentPlayer == PlayerColor.BLUE ? PlayerColor.RED : PlayerColor.BLUE;
+        view.getChessGameFrame().getTurnLabel(currentPlayer, turnCount);
     }
+
+    public void timer(){
+        final String[] s0 = new String[1];
+        ActionListener play = new ActionListener(){
+            long start = (System.currentTimeMillis()-1000);
+            public void actionPerformed(ActionEvent e) {
+
+                long now = System.currentTimeMillis();
+
+                long change = now- start;
+
+                // 转换日期显示格式
+                SimpleDateFormat df = new SimpleDateFormat("mm:ss");
+                if(win()){
+                    s0[0] = df.format(new Date(change));
+                }else{
+                    s0[0] = df.format(new Date(change));
+                    view.getChessGameFrame().getTime(s0[0]);
+                }
+            }
+        };
+        Timer timeAction0= new Timer(1000, play);
+        timeAction0.start();
+        if(win()){
+            timeAction0.stop();
+        }
+
+    }
+
 
     private boolean win() {
         if (model.isAllCaptured(PlayerColor.RED)) {
@@ -74,14 +113,12 @@ public class GameController implements GameListener {
             return true;
         }
         if (model.isAllCaptured(PlayerColor.BLUE)) {
-
-
             winner = PlayerColor.RED;
             return true;
         }
-        int nestX1 = 0; // 自己巢穴的X坐标
+        int nestX1 = 0; // 自己巢穴的X坐标red
         int nestY1 = 3; // 自己巢穴的Y坐标
-        int nestX2 = 8; // 自己巢穴的X坐标
+        int nestX2 = 8; // 自己巢穴的X坐标blue
         int nestY2 = 3; // 自己巢穴的Y坐标
         // 检查是否有对方的棋子进入自己的巢穴
         if (model.grid[nestX1][nestY1].getPiece() != null && model.grid[nestX1][nestY1].getPiece().getOwner() != model.grid[nestX1][nestY1].getOwner()) {
@@ -105,12 +142,13 @@ public class GameController implements GameListener {
         winner = null;
         selectedPoint = null;
         turnCount = 1;
+
     }
     public void gameOver(){
         if (winner == PlayerColor.BLUE) {
-            JOptionPane.showMessageDialog(null, "Blue wins!");
+            JOptionPane.showMessageDialog(null, "Blue wins!" + s0[0]);
         } else if (winner == PlayerColor.RED) {
-            JOptionPane.showMessageDialog(null, "Red wins!");
+            JOptionPane.showMessageDialog(null, "Red wins!" + s0[0]);
         }
         restart();
     }
@@ -135,7 +173,7 @@ public class GameController implements GameListener {
         }
         //if the chess enter Dens or Traps
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)&&model.grid[point.getRow()][point.getCol()].getType()==GridType.den) {
-        winner=currentPlayer;
+            winner=currentPlayer;
         }
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)&&model.grid[point.getRow()][point.getCol()].getType().equals(GridType.trap)) {
             model.getTrapped(point);
@@ -168,7 +206,6 @@ public class GameController implements GameListener {
                 view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
                 selectedPoint = null;
                 swapColor();
-
                 if(currentPlayer==PlayerColor.RED)
                 {
                     turnCount++;
@@ -289,6 +326,7 @@ public class GameController implements GameListener {
         }
         return true;
     }
+
     public void undo()
     {
         if (stepList.isEmpty()) {
