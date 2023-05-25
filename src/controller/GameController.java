@@ -175,8 +175,10 @@ public class GameController implements GameListener {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)&&model.grid[point.getRow()][point.getCol()].getType()==GridType.den) {
             winner=currentPlayer;
         }
-        if (selectedPoint != null && model.isValidMove(selectedPoint, point)&&model.grid[point.getRow()][point.getCol()].getType().equals(GridType.trap)) {
-            model.getTrapped(point);
+        if(selectedPoint!=null&&model.grid[selectedPoint.getRow()][selectedPoint.getCol()].getType().equals(GridType.trap)&&model.isValidMove(selectedPoint, point))
+        {
+            model.exitTrap(selectedPoint);
+            System.out.printf("exit trap");
         }
         if(win())
         {
@@ -199,12 +201,19 @@ public class GameController implements GameListener {
             component.repaint();
         } else {
             if (model.isValidCapture(selectedPoint, point)) {
+
                 Step step = model.recordStep(selectedPoint, point, currentPlayer, turnCount);
                 stepList.add(step);
                 model.captureChessPiece(selectedPoint, point);
                 view.removeChessComponentAtGrid(point);
                 view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
                 selectedPoint = null;
+                if(model.grid[point.getRow()][point.getCol()].getType()==GridType.trap)
+                {
+                    model.getTrapped(point);
+                    System.out.println("trap");
+                    System.out.printf(model.grid[point.getRow()][point.getCol()].getType().toString());
+                }
                 swapColor();
                 if(currentPlayer==PlayerColor.RED)
                 {

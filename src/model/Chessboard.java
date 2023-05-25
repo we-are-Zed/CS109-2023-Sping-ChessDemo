@@ -175,6 +175,9 @@ public class Chessboard {
         if (getChessPieceAt(src) == null || getChessPieceAt(dest) != null) {
             return false;
         }
+        if(grid[src.getRow()][src.getCol()].getType().equals(GridType.trap)){
+            return false;
+        }
         if (riverCell.contains(dest)) {
             if (!Objects.equals(getChessPieceAt(src).getName(), "Rat")) {
                 return false;
