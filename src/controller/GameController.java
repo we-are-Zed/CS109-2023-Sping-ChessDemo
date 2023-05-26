@@ -175,11 +175,6 @@ public class GameController implements GameListener {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)&&model.grid[point.getRow()][point.getCol()].getType()==GridType.den) {
             winner=currentPlayer;
         }
-        if(selectedPoint!=null&&model.grid[selectedPoint.getRow()][selectedPoint.getCol()].getType().equals(GridType.trap)&&model.isValidMove(selectedPoint, point))
-        {
-            model.exitTrap(selectedPoint);
-            System.out.printf("exit trap");
-        }
         if(win())
         {
             gameOver();
@@ -336,11 +331,28 @@ public class GameController implements GameListener {
         return true;
     }
 
+    public void Undo(Step step)
+    {
+        ChessboardPoint fromPoint = step.getFrom();
+        ChessboardPoint toPoint = step.getTo();
+        ChessPiece fromPiece = step.getFromChessPiece();
+        ChessPiece toPiece = step.getToChessPiece();
+        if (toPiece != null) {
+            model.setChessPiece(toPoint, toPiece);
+        } else {
+            model.setChessPiece(toPoint, null);
+        }
+        model.setChessPiece(fromPoint, fromPiece);
+    }
     public void undo()
     {
         if (stepList.isEmpty()) {
             return;
         }
-
+        Step step = stepList.remove(stepList.size() - 1);
+        Undo(step);
+        view.undoStep(step);
+        view.repaint();
+        swapColor();
     }
 }

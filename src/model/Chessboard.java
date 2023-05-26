@@ -51,12 +51,12 @@ public class Chessboard {
         grid[0][0].setPiece(new ChessPiece(PlayerColor.RED, "Lion", 7));
         grid[0][6].setPiece(new ChessPiece(PlayerColor.RED, "Tiger", 6));
 
-        grid[0][2].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
-        grid[0][4].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
-        grid[8][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
-        grid[8][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
-        grid[1][3].setPiece(new ChessPiece(PlayerColor.RED, "Trap", 0));
-        grid[7][3].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", 0));
+        grid[0][2].setPiece(new ChessPiece(PlayerColor.RED, "Trap", -1));
+        grid[0][4].setPiece(new ChessPiece(PlayerColor.RED, "Trap", -1));
+        grid[8][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", -1));
+        grid[8][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", -1));
+        grid[1][3].setPiece(new ChessPiece(PlayerColor.RED, "Trap", -1));
+        grid[7][3].setPiece(new ChessPiece(PlayerColor.BLUE, "Trap", -1));
     }
     private void initSets() {
         riverCell.add(new ChessboardPoint(3, 1));
@@ -142,7 +142,7 @@ public class Chessboard {
         return chessPiece;
     }
 
-    private void setChessPiece(ChessboardPoint point, ChessPiece chessPiece) {
+    public void setChessPiece(ChessboardPoint point, ChessPiece chessPiece) {
         getGridAt(point).setPiece(chessPiece);
     }
 
@@ -175,7 +175,7 @@ public class Chessboard {
         if (getChessPieceAt(src) == null || getChessPieceAt(dest) != null) {
             return false;
         }
-        if(grid[src.getRow()][src.getCol()].getType().equals(GridType.trap)){
+        if(grid[src.getRow()][src.getCol()].getPiece().getRank()==-1){
             return false;
         }
         if (riverCell.contains(dest)) {

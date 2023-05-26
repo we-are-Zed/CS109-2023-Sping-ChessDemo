@@ -235,5 +235,50 @@ public class ChessboardComponent extends JComponent {
         repaint();
         revalidate();
     }
+    public void undoStep(Step step) {
+        ChessboardPoint from = step.getFrom();
+        ChessboardPoint to = step.getTo();
+        ChessPiece fromChessPiece = step.getFromChessPiece();
+        ChessPiece toChessPiece = step.getToChessPiece();
+        if (toChessPiece != null) {
+            removeChessComponentAtGrid(to);
+            if (toChessPiece.getName().equals("Elephant")){
+                setChessComponentAtGrid(to, new ElephantChessComponent(toChessPiece.getOwner(), CHESS_SIZE));
+            } else if (toChessPiece.getName().equals("Lion")){
+                setChessComponentAtGrid(to, new LionChessComponent(toChessPiece.getOwner(), CHESS_SIZE));
+            } else if (toChessPiece.getName().equals("Tiger")){
+                setChessComponentAtGrid(to, new TigerChessComponent(toChessPiece.getOwner(), CHESS_SIZE));
+            } else if (toChessPiece.getName().equals("Leopard")){
+                setChessComponentAtGrid(to, new LeopardChessComponent(toChessPiece.getOwner(), CHESS_SIZE));
+            } else if (toChessPiece.getName().equals("Wolf")){
+                setChessComponentAtGrid(to, new WolfChessComponent(toChessPiece.getOwner(), CHESS_SIZE));
+            } else if (toChessPiece.getName().equals("Dog")){
+                setChessComponentAtGrid(to, new DogChessComponent(toChessPiece.getOwner(), CHESS_SIZE));
+            } else if (toChessPiece.getName().equals("Cat")){
+                setChessComponentAtGrid(to, new CatChessComponent(toChessPiece.getOwner(), CHESS_SIZE));
+            } else if (toChessPiece.getName().equals("Rat")){
+                setChessComponentAtGrid(to, new RatChessComponent(toChessPiece.getOwner(), CHESS_SIZE));
+            }
+        } else {
+            removeChessComponentAtGrid(to);
+        }
 
+        if (fromChessPiece.getName().equals("Elephant")){
+            setChessComponentAtGrid(from, new ElephantChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Lion")){
+            setChessComponentAtGrid(from, new LionChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Tiger")){
+            setChessComponentAtGrid(from, new TigerChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Leopard")){
+            setChessComponentAtGrid(from, new LeopardChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Wolf")){
+            setChessComponentAtGrid(from, new WolfChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Dog")){
+            setChessComponentAtGrid(from, new DogChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Cat")){
+            setChessComponentAtGrid(from, new CatChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Rat")){
+            setChessComponentAtGrid(from, new RatChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        }
+    }
 }
