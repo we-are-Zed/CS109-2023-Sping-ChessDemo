@@ -39,6 +39,9 @@ public class ChessGameFrame extends JFrame {
     public void setChessboardComponent(ChessboardComponent chessboardComponent) {
         this.chessboardComponent = chessboardComponent;
     }
+    public JLabel getTimeLabel() {
+        return timeLabel;
+    }
     public ChessGameFrame(int width, int height) {
         setTitle("Jungle "); //设置标题
         this.WIDTH = width;
@@ -61,6 +64,7 @@ public class ChessGameFrame extends JFrame {
         addSaveButton();
         addLoadButton();
         addBackgroundImage();
+        addAiButton();
     }
 
 
@@ -218,23 +222,17 @@ public class ChessGameFrame extends JFrame {
         add(loadButton);
     }
 
+    private void addAiButton() {
+        JButton aiButton = new JButton("AI");
+        aiButton.setLocation(HEIGTH, HEIGTH / 10 + 180);
+        aiButton.setSize(150, 60);
+        aiButton.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(aiButton);
+
+        aiButton.addActionListener(e -> {
+            System.out.println("ai");
+        });
 
 
-
-
-//    private void addLoadButton() {
-//        JButton button = new JButton("Load");
-//        button.setLocation(HEIGTH, HEIGTH / 10 + 240);
-//        button.setSize(200, 60);
-//        button.setFont(new Font("Rockwell", Font.BOLD, 20));
-//        add(button);
-//
-//        button.addActionListener(e -> {
-//            System.out.println("Click load");
-//            String path = JOptionPane.showInputDialog(this,"Input Path here");
-//            gameController.loadGameFromFile(path);
-//        });
-//    }
-
-
+    }
 }
