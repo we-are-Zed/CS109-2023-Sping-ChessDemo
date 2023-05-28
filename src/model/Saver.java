@@ -54,14 +54,14 @@ public class Saver {
     {
         if(chessPiece== null)
             return "0";
-        else if(chessPiece.getName().equals("Elephant")) return "E";
-        else if(chessPiece.getName().equals("Lion")) return "L";
-        else if(chessPiece.getName().equals("Tiger")) return "T";
-        else if(chessPiece.getName().equals("Leopard")) return "P";
-        else if(chessPiece.getName().equals("Wolf")) return "W";
-        else if(chessPiece.getName().equals("Dog")) return "D";
-        else if(chessPiece.getName().equals("Cat")) return "C";
-        else if(chessPiece.getName().equals("Rat")) return "R";
+        else if(chessPiece.getName().equals("Elephant")) return "e";
+        else if(chessPiece.getName().equals("Lion")) return "l";
+        else if(chessPiece.getName().equals("Tiger")) return "t";
+        else if(chessPiece.getName().equals("Leopard")) return "L";
+        else if(chessPiece.getName().equals("Wolf")) return "w";
+        else if(chessPiece.getName().equals("Dog")) return "d";
+        else if(chessPiece.getName().equals("Cat")) return "c";
+        else if(chessPiece.getName().equals("Rat")) return "r";
         else return "";
     }
     private Saver() {}

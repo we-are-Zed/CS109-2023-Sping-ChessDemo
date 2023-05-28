@@ -21,7 +21,7 @@ public class Chessboard {
 
     public Chessboard() {
         this.grid = new Cell[Constant.CHESSBOARD_ROW_SIZE.getNum()][Constant.CHESSBOARD_COL_SIZE.getNum()];//19X19
-
+          steps=new ArrayList<>();
         initGrid();
         initSets();
         initPieces();
@@ -128,7 +128,7 @@ public class Chessboard {
         return getGridAt(point).getPiece();
     }
 
-    private Cell getGridAt(ChessboardPoint point) {
+    public Cell getGridAt(ChessboardPoint point) {
         return grid[point.getRow()][point.getCol()];
     }
 
@@ -408,6 +408,12 @@ public class Chessboard {
         ChessPiece toPiece = getChessPieceAt(toPoint);
         Step step = new Step(fromPoint, toPoint, fromPiece, toPiece, currentPlayer, turn);
 //        System.out.println(step);
+        return step;
+    }
+    public Step recordStep(ChessboardPoint fromPoint, ChessboardPoint toPoint, PlayerColor currentPlayer, int turn,ChessPiece beCaptured) {
+        ChessPiece fromPiece = getChessPieceAt(fromPoint);
+        ChessPiece toPiece = getChessPieceAt(toPoint);
+        Step step = new Step(fromPoint, toPoint, fromPiece, toPiece, currentPlayer, turn, beCaptured);
         return step;
     }
 

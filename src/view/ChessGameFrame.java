@@ -1,7 +1,9 @@
 package view;
 
 import controller.GameController;
+import model.Chessboard;
 import model.PlayerColor;
+import model.Saver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +31,7 @@ public class ChessGameFrame extends JFrame {
     JLabel background;
     JLabel statusLabel ;
     JLabel timeLabel ;
+    public Saver saver;
     private String[] bgPaths = {"day.png", "night.png"};
     public ChessboardComponent getChessboardComponent() {
         return chessboardComponent;
@@ -189,9 +192,14 @@ public class ChessGameFrame extends JFrame {
     private void addSaveButton() {
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Save"));
-//        saveButton.addActionListener(e -> {
-//            System.out.println("Click save");
-//            chessboardComponent.Save();});
+        saveButton.addActionListener(e -> {
+            System.out.println("Click save");
+            String path = JOptionPane.showInputDialog("存档名");
+            while (path.equals("")){
+                JOptionPane.showMessageDialog(null, "存档名不能为空");
+                path = JOptionPane.showInputDialog("存档名");
+            }
+            chessboardComponent.getGameController().Save(path);});
         saveButton.setLocation(HEIGTH, HEIGTH / 10 + 470);
         saveButton.setSize(150, 60);
         saveButton.setFont(new Font("Rockwell", Font.BOLD, 20));

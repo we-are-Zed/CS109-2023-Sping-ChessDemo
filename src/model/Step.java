@@ -9,6 +9,7 @@ public class Step implements Serializable, Comparable<Step> {
     private ChessPiece toChessPiece;
     private PlayerColor currentPlayer;
     private transient int value;
+    public ChessPiece beCaptured;
     private int turnCount;
 
     public Step(ChessboardPoint from, ChessboardPoint to, ChessPiece fromChessPiece, ChessPiece toChessPiece, PlayerColor currentPlayer, int turnCount) {
@@ -18,7 +19,16 @@ public class Step implements Serializable, Comparable<Step> {
         this.toChessPiece = toChessPiece;
         this.currentPlayer = currentPlayer;
         this.turnCount = turnCount;
+        beCaptured=null;
     }
+    public Step(ChessboardPoint from, ChessboardPoint to, ChessPiece fromChessPiece, ChessPiece toChessPiece, PlayerColor currentPlayer, int turnCount,ChessPiece beCaptured) {
+        this.from = from;
+        this.to = to;
+        this.fromChessPiece = fromChessPiece;
+        this.toChessPiece = toChessPiece;
+        this.currentPlayer = currentPlayer;
+        this.turnCount = turnCount;
+        this.beCaptured=beCaptured;}
 
     public ChessboardPoint getFrom() {
         return from;
@@ -78,13 +88,16 @@ public class Step implements Serializable, Comparable<Step> {
 
     @Override
     public String toString() {
-        return "Step{" +
-                "from=" + from +
-                ", to=" + to +
-                ", fromChessPiece=" + fromChessPiece +
-                ", toChessPiece=" + toChessPiece +
-                ", value=" + value +
-                '}';
+        if (beCaptured == null)
+            return (currentPlayer == PlayerColor.BLUE ? "B " : "R ") +
+                    "(" + from.getRow() + "," + from.getCol() + ") " +
+                    "(" + to.getRow() +"," + to.getCol() + ") " +
+                    "null";
+        else
+            return (currentPlayer == PlayerColor.BLUE ? "B " : "R ") +
+                    "(" + from.getRow() + "," + from.getCol() + ") " +
+                    "(" + to.getRow() +"," + to.getCol() + ") " +
+                    beCaptured.getName();
     }
 
     @Override
