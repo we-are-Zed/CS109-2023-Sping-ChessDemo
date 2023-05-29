@@ -124,7 +124,7 @@ public class Chessboard {
         grid[7][3].setOwner(PlayerColor.BLUE);
     }
 
-    private ChessPiece getChessPieceAt(ChessboardPoint point) {
+    public ChessPiece getChessPieceAt(ChessboardPoint point) {
         return getGridAt(point).getPiece();
     }
 
@@ -257,14 +257,15 @@ public class Chessboard {
         if (getGridAt(dest).getType() == GridType.den && getGridAt(dest).getOwner() ==getChessPieceAt(src).getOwner() ) {
             return false;
         }
-        else if(getGridAt(dest).getType() == GridType.den && getGridAt(dest).getOwner() !=getChessPieceAt(src).getOwner())
+        else if(getGridAt(dest).getType() == GridType.den && getGridAt(dest).getOwner() !=getChessPieceAt(src).getOwner()&&calculateDistance(src, dest) == 1)
         {
             return true;
         }
+
         if (getGridAt(dest).getType() == GridType.trap && getGridAt(dest).getOwner() ==getChessPieceAt(src).getOwner() ) {
             return false;
         }
-        else if(getGridAt(dest).getType() == GridType.trap && getGridAt(dest).getOwner() !=getChessPieceAt(src).getOwner())
+        else if(getGridAt(dest).getType() == GridType.trap && getGridAt(dest).getOwner() !=getChessPieceAt(src).getOwner()&&calculateDistance(src, dest) == 1)
         {
             return true;
         }

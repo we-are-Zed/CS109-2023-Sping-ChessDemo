@@ -48,4 +48,8 @@ public class ChessPiece {
     public PlayerColor getOwner() {
         return owner;
     }
+
+    public PlayerColor getColor() {
+        return owner;
+    }
 }

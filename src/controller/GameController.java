@@ -59,8 +59,8 @@ public class GameController implements GameListener {
         Timer.setTime(45);
         Timer.start();
 
-        if(gameMode==Mode.Easy||gameMode==Mode.Difficulty){
-            ai=new AI(gameMode,model);
+        if (gameMode == Mode.Easy || gameMode == Mode.Difficulty) {
+            ai = new AI(gameMode, model);
         }
     }
 
@@ -77,33 +77,37 @@ public class GameController implements GameListener {
         view.getChessGameFrame().getTurnLabel(currentPlayer, turnCount);
     }
 
-    public void timer(){
+    public void timer() {
         final String[] s0 = new String[1];
-        ActionListener play = new ActionListener(){
-            long start = (System.currentTimeMillis()-1000);
+        ActionListener play = new ActionListener() {
+            long start = (System.currentTimeMillis() - 1000);
+
             public void actionPerformed(ActionEvent e) {
 
                 long now = System.currentTimeMillis();
 
-                long change = now- start;
+                long change = now - start;
 
                 // 转换日期显示格式
                 SimpleDateFormat df = new SimpleDateFormat("mm:ss");
-                if(win()){
+                if (win()) {
                     s0[0] = df.format(new Date(change));
-                }else{
+                } else {
                     s0[0] = df.format(new Date(change));
                     view.getChessGameFrame().getTime(s0[0]);
                 }
             }
         };
-        Timer timeAction0= new Timer(1000, play);
+        Timer timeAction0 = new Timer(1000, play);
         timeAction0.start();
-        if(win()){
+        if (win()) {
             timeAction0.stop();
         }
 
     }
+   public Chessboard getChessboard(){
+        return model;
+   }
 
 
     private boolean win() {
@@ -143,9 +147,11 @@ public class GameController implements GameListener {
         view.repaint();
         Timer.setTime(45);
         view.getChessGameFrame().getTurnLabel(currentPlayer, turnCount);
+        this.ai=view.getChessGameFrame().getAi();
 
     }
-    public void gameOver(){
+
+    public void gameOver() {
         if (winner == PlayerColor.BLUE) {
             JOptionPane.showMessageDialog(null, "Blue wins!" + s0[0]);
         } else if (winner == PlayerColor.RED) {
@@ -159,6 +165,7 @@ public class GameController implements GameListener {
     @Override
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {//如果有选中的棋子，且移动合法
+            hideValidMoves();
             Step step = model.recordStep(selectedPoint, point, currentPlayer, turnCount);
             stepList.add(step);
             System.out.printf(stepList.toString());
@@ -166,19 +173,19 @@ public class GameController implements GameListener {
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor();
-            if(currentPlayer==PlayerColor.RED)
-            {
-                turnCount++;
+            if (currentPlayer == PlayerColor.RED) {
+               turnCount++;
+                aiMove();
             }
+            hideValidMoves();
             view.repaint();
             Timer.setTime(45);
         }
         //if the chess enter Dens or Traps
-        if (selectedPoint != null && model.isValidMove(selectedPoint, point)&&model.grid[point.getRow()][point.getCol()].getType()==GridType.den) {
-            winner=currentPlayer;
+        if (selectedPoint != null && model.isValidMove(selectedPoint, point) && model.grid[point.getRow()][point.getCol()].getType() == GridType.den) {
+            winner = currentPlayer;
         }
-        if(win())
-        {
+        if (win()) {
             gameOver();
         }
     }
@@ -188,11 +195,13 @@ public class GameController implements GameListener {
     public void onPlayerClickChessPiece(ChessboardPoint point, AnimalChessComponent component) {
         if (selectedPoint == null) {
             if (model.getChessPieceOwner(point).equals(currentPlayer)) {
+                showValidMoves(point);
                 selectedPoint = point;
                 component.setSelected(true);
                 component.repaint();
             }
         } else if (selectedPoint.equals(point)) {
+            hideValidMoves();
             selectedPoint = null;
             component.setSelected(false);
             component.repaint();
@@ -201,37 +210,37 @@ public class GameController implements GameListener {
 
                 Step step = model.recordStep(selectedPoint, point, currentPlayer, turnCount, model.getGridAt(point).getPiece());
                 stepList.add(step);
+                hideValidMoves();
                 model.captureChessPiece(selectedPoint, point);
                 view.removeChessComponentAtGrid(point);
                 view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
                 selectedPoint = null;
-                if(model.grid[point.getRow()][point.getCol()].getType()==GridType.trap)
-                {
+                if (model.grid[point.getRow()][point.getCol()].getType() == GridType.trap) {
                     model.getTrapped(point);
                     System.out.println("trap");
                     System.out.printf(model.grid[point.getRow()][point.getCol()].getType().toString());
                 }
                 swapColor();
-                if(currentPlayer==PlayerColor.RED)
-                {
+                if (currentPlayer == PlayerColor.RED) {
                     turnCount++;
+                    aiMove();
                 }
                 view.repaint();
                 Timer.setTime(45);
             }
             // TODO: Implement capture function
         }
-        if(win())
-        {
+        if (win()) {
             gameOver();
         }
     }
+
     public void Save(String fileName) {
         String location = "save\\" + fileName + ".txt";
         File file = new File(location);
 
         try {
-            if(file.exists()){     // 若文档存在，询问是否覆盖
+            if (file.exists()) {     // 若文档存在，询问是否覆盖
                 int n = JOptionPane.showConfirmDialog(view, "存档已存在，是否覆盖?", "", JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
                     file.delete();
@@ -239,11 +248,11 @@ public class GameController implements GameListener {
             }
 
             // 创建文档
-            FileWriter fileWriter = new FileWriter(location,true);
+            FileWriter fileWriter = new FileWriter(location, true);
 
             fileWriter.write(stepList.size() + "");
             fileWriter.write("\n");
-            for(int i=0;i<stepList.size();i++){
+            for (int i = 0; i < stepList.size(); i++) {
                 fileWriter.write(stepList.get(i).toString());
                 fileWriter.write("\n");
             }
@@ -260,29 +269,28 @@ public class GameController implements GameListener {
             }
             fileWriter.close();
             System.out.println("Save Done");
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    public boolean Load(){
+
+    public boolean Load() {
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File("save"));
         chooser.showDialog(view, "选择");
         File file = chooser.getSelectedFile();
         stepList = new LinkedList<>();
-        if(!file.getName().endsWith(".txt"))
-        {
+        if (!file.getName().endsWith(".txt")) {
             JOptionPane.showMessageDialog(null, "选择文件无效\n请重新选择", "后缀错误", JOptionPane.ERROR_MESSAGE);
             restart();
             return false;
         }
 
-        try{
+        try {
             String text;
             ArrayList<String> readList = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"GBK"));
-            while((text = reader.readLine())!=null&&!"".equals(text))
-            {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "GBK"));
+            while ((text = reader.readLine()) != null && !"".equals(text)) {
                 readList.add(text);
             }
             int num = Integer.parseInt(readList.remove(0));
@@ -303,18 +311,18 @@ public class GameController implements GameListener {
                     return false;
                 }
             }
-            try{
+            try {
                 for (int j = num + 1; j < num + 10; j++) {
-                      boolean a=true;
-                    String[] chess= readList.get(j).split(" ");
-                    if (chess.length != 7){
+                    boolean a = true;
+                    String[] chess = readList.get(j).split(" ");
+                    if (chess.length != 7) {
                         JOptionPane.showMessageDialog(null, "棋盘规格错误1\n请重新选择",
                                 "错误", JOptionPane.ERROR_MESSAGE);
                         restart();
                         return false;
                     }
-                    if(!checkName(chess)) a=false;
-                    if (!a){
+                    if (!checkName(chess)) a = false;
+                    if (!a) {
                         JOptionPane.showMessageDialog(null, "棋子名字错误\n请重新选择",
                                 "错误", JOptionPane.ERROR_MESSAGE);
                         restart();
@@ -328,28 +336,24 @@ public class GameController implements GameListener {
                 return false;
             }
             restart();
-            for(int i=0;i<num;i++)
-            {
+            for (int i = 0; i < num; i++) {
                 String[] step = readList.get(i).split(" ");
-                ChessboardPoint point1 = new ChessboardPoint(Integer.parseInt(step[1].charAt(1)+""),Integer.parseInt(step[1].charAt(3)+""));
-                ChessboardPoint point2 = new ChessboardPoint(Integer.parseInt(step[2].charAt(1)+""),Integer.parseInt(step[2].charAt(3)+""));
+                ChessboardPoint point1 = new ChessboardPoint(Integer.parseInt(step[1].charAt(1) + ""), Integer.parseInt(step[1].charAt(3) + ""));
+                ChessboardPoint point2 = new ChessboardPoint(Integer.parseInt(step[2].charAt(1) + ""), Integer.parseInt(step[2].charAt(3) + ""));
                 boolean captureHappen = !step[3].equals("null");
 
-                if(!captureHappen)
-                {
-                    if (!model.isValidMove(point1, point2)){
+                if (!captureHappen) {
+                    if (!model.isValidMove(point1, point2)) {
                         JOptionPane.showMessageDialog(null, "存在错误移动\n请重新选择",
                                 "移动错误", JOptionPane.ERROR_MESSAGE);
                         restart();
                         return false;
                     }
-                    if(i%2==0)
-                    {
-                        Step step1=new Step(point1,point2,model.grid[point1.getRow()][point1.getCol()].getPiece(),model.grid[point1.getRow()][point1.getCol()].getPiece(),PlayerColor.BLUE,turnCount);
+                    if (i % 2 == 0) {
+                        Step step1 = new Step(point1, point2, model.grid[point1.getRow()][point1.getCol()].getPiece(), model.grid[point2.getRow()][point2.getCol()].getPiece(), PlayerColor.BLUE, turnCount);
                         stepList.add(step1);
-                    }
-                    else {
-                        Step step1=new Step(point1,point2,model.grid[point1.getRow()][point1.getCol()].getPiece(),model.grid[point1.getRow()][point1.getCol()].getPiece(),PlayerColor.RED,turnCount);
+                    } else {
+                        Step step1 = new Step(point1, point2, model.grid[point1.getRow()][point1.getCol()].getPiece(), model.grid[point2.getRow()][point2.getCol()].getPiece(), PlayerColor.RED, turnCount);
                         stepList.add(step1);
                     }
                     model.moveChessPiece(point1, point2);
@@ -357,21 +361,18 @@ public class GameController implements GameListener {
                     swapColor();
                     selectedPoint = null;
                     view.repaint();
-                }
-                else {
-                    if (!model.isValidCapture(point1, point2)){
+                } else {
+                    if (!model.isValidCapture(point1, point2)) {
                         JOptionPane.showMessageDialog(null, "存在错误捕捉\n请重新选择",
                                 "捕捉错误", JOptionPane.ERROR_MESSAGE);
                         restart();
                         return false;
                     }
-                    if(i%2==0)
-                    {
-                        Step step1=new Step(point1,point2,model.grid[point1.getRow()][point1.getCol()].getPiece(),model.grid[point2.getRow()][point2.getCol()].getPiece(),PlayerColor.BLUE,turnCount,model.getGridAt(point2).getPiece());
+                    if (i % 2 == 0) {
+                        Step step1 = new Step(point1, point2, model.grid[point1.getRow()][point1.getCol()].getPiece(), model.grid[point2.getRow()][point2.getCol()].getPiece(), PlayerColor.BLUE, turnCount, model.getGridAt(point2).getPiece());
                         stepList.add(step1);
-                    }
-                    else {
-                        Step step1=new Step(point1,point2,model.grid[point1.getRow()][point1.getCol()].getPiece(),model.grid[point2.getRow()][point2.getCol()].getPiece(),PlayerColor.RED,turnCount,model.getGridAt(point2).getPiece());
+                    } else {
+                        Step step1 = new Step(point1, point2, model.grid[point1.getRow()][point1.getCol()].getPiece(), model.grid[point2.getRow()][point2.getCol()].getPiece(), PlayerColor.RED, turnCount, model.getGridAt(point2).getPiece());
                         stepList.add(step1);
                     }
 
@@ -383,7 +384,7 @@ public class GameController implements GameListener {
                     view.repaint();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "读取失败",
                     "错误", JOptionPane.ERROR_MESSAGE);
             restart();
@@ -391,18 +392,20 @@ public class GameController implements GameListener {
         }
         return true;
     }
-    private static boolean checkName(String[] chess){
+
+    private static boolean checkName(String[] chess) {
         for (int i = 0; i < chess.length; i++) {
             if (!chess[i].equals("e") && !chess[i].equals("l") && !chess[i].equals("t") && !chess[i].equals("L")
                     && !chess[i].equals("w") && !chess[i].equals("d") && !chess[i].equals("c") && !chess[i].equals("r")
-                    && !chess[i].equals("0")){
+                    && !chess[i].equals("0")) {
                 return false;
             }
         }
         return true;
     }
-    private static String saveName(ChessPiece chess){
-        if (chess == null||chess.getName().equals("Trap")) return "0";
+
+    private static String saveName(ChessPiece chess) {
+        if (chess == null || chess.getName().equals("Trap")) return "0";
         else if (chess.getName().equals("Elephant")) return "e";
         else if (chess.getName().equals("Lion")) return "l";
         else if (chess.getName().equals("Tiger")) return "t";
@@ -415,8 +418,7 @@ public class GameController implements GameListener {
     }
 
 
-    public void Undo(Step step)
-    {
+    public void Undo(Step step) {
         ChessboardPoint Point1 = step.getFrom();
         ChessboardPoint Point2 = step.getTo();
         ChessPiece Piece1 = step.getFromChessPiece();
@@ -428,8 +430,8 @@ public class GameController implements GameListener {
         }
         model.setChessPiece(Point1, Piece1);
     }
-    public void undo()
-    {
+
+    public void undo() {
         if (stepList.isEmpty()) {
             return;
         }
@@ -437,11 +439,42 @@ public class GameController implements GameListener {
         Undo(step);
         view.Undo(step);
         view.repaint();
-        if(currentPlayer==PlayerColor.BLUE)
-        {
+        if (currentPlayer == PlayerColor.BLUE) {
             turnCount--;
             view.getChessGameFrame().getTurnLabel(currentPlayer, turnCount);
         }
         swapColor();
+    }
+    public void showValidMoves(ChessboardPoint point) {
+        validMoves = model.getValidMoves(point);
+        view.showValidMoves(validMoves);
+    }
+    public void hideValidMoves() {
+        view.hideValidMoves(validMoves);
+    }
+    public void aiMove() {
+     if(ai!=null&&currentPlayer!=PlayerColor.BLUE)
+     {
+         Step step=ai.run(currentPlayer);
+         if(step!=null)
+         {
+             selectedPoint=step.getFrom();
+             view.setAiPlay(true);
+             view.paintComponents(view.getGraphics());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+         }
+         selectedPoint =null;
+         stepList.add(step);
+            model.moveChessPiece(step.getFrom(), step.getTo());
+            view.setChessComponentAtGrid(step.getTo(), view.removeChessComponentAtGrid(step.getFrom()));
+            view.repaint();
+            swapColor();
+            view.setAiPlay(false);
+     }
     }
 }

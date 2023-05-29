@@ -1,5 +1,6 @@
 import controller.GameController;
 import model.Chessboard;
+import view.Begin;
 import view.ChessGameFrame;
 
 import javax.swing.*;
@@ -9,9 +10,9 @@ import view.Music;
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            ChessGameFrame mainFrame = new ChessGameFrame(1100, 810);
-            GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard());
-            mainFrame.setVisible(true);
+            Begin begin = new Begin();
+            GameController gameController = new GameController(begin.getChessGameFrame().getChessboardComponent(), new Chessboard());
+            begin.setVisible(true);
         });
         URL musicURL = Main.class.getResource("/music.wav");
 

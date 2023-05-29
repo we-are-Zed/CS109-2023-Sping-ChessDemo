@@ -19,9 +19,8 @@ public class Time extends Thread{
     }
 
     public void run() {
-        boolean b = true;
         l.setText("45");
-        while(b) {
+        while(true) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -32,12 +31,8 @@ public class Time extends Thread{
             if(time >= 0){
                 String sec = String.valueOf(time);
                 l.setText(sec);
-            }else{
-                b = false;
             }
         }
     }
-
-
 
 }

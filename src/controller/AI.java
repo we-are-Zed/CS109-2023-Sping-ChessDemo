@@ -1,8 +1,6 @@
 package controller;
 
-import model.Chessboard;
-import model.PlayerColor;
-import model.Step;
+import model.*;
 
 import java.util.List;
 
@@ -30,7 +28,40 @@ public class AI {
         return null;
     }
     public Step runDifficulty(PlayerColor color) {
+        List<Step> steps = model.getLegalMove(color);
+        Step bestStep = null;
+        int maxEnemyRank = -1;
 
-        return null;
+        // Select the step that can attack the highest rank enemy
+        for (Step step : steps) {
+            ChessPiece piece = model.getChessPieceAt(step.getDest());
+            if (piece != null && piece.getColor() != color) {
+                if (piece.getRank() > maxEnemyRank) {
+                    maxEnemyRank = piece.getRank();
+                    bestStep = step;
+                }
+            }
+        }
+
+        if (bestStep == null) {
+            int minDistanceToBase = Integer.MAX_VALUE;
+            for (Step step : steps) {
+                int distanceToBase = computeDistanceToEnemyBase(step.getDest());
+                if (distanceToBase < minDistanceToBase) {
+                    minDistanceToBase = distanceToBase;
+                    bestStep = step;
+                }
+            }
+        }
+
+        return bestStep;
     }
+
+    private int computeDistanceToEnemyBase(ChessboardPoint point) {
+        return point.getRow();
+    }
+    public String toString() {
+        return "AI";
+    }
+
 }

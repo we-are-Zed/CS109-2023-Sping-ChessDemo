@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static model.Constant.CHESSBOARD_COL_SIZE;
@@ -35,6 +36,7 @@ public class ChessboardComponent extends JComponent {
 
     private GameController gameController;
     private ChessGameFrame chessGameFrame;
+    private boolean aiPlay=false;
 
     public GameController getGameController(){return gameController;}
 
@@ -278,6 +280,23 @@ public class ChessboardComponent extends JComponent {
             setChessComponentAtGrid(point1, new CatChessComponent(ChessPiece1.getOwner(), CHESS_SIZE));
         } else if (ChessPiece1.getName().equals("Rat")){
             setChessComponentAtGrid(point1, new RatChessComponent(ChessPiece1.getOwner(), CHESS_SIZE));
+        }
+    }
+    public void setAiPlay(boolean aiPlay) {
+        this.aiPlay = aiPlay;
+    }
+    public void showValidMoves(List<ChessboardPoint> validMoves) {
+        for (ChessboardPoint validMove : validMoves) {
+            CellComponent cellComponent = getGridComponentAt(validMove);
+            cellComponent.setValidMove(true);
+            paintImmediately(this.getBounds());
+        }
+    }
+    public void hideValidMoves(List<ChessboardPoint> validMoves) {
+        for (ChessboardPoint validMove : validMoves) {
+            CellComponent cellComponent = getGridComponentAt(validMove);
+            cellComponent.setValidMove(false);
+            cellComponent.repaint();
         }
     }
 }

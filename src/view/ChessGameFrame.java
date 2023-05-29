@@ -1,6 +1,8 @@
 package view;
 
+import controller.AI;
 import controller.GameController;
+import controller.Mode;
 import model.Chessboard;
 import model.PlayerColor;
 import model.Saver;
@@ -18,6 +20,7 @@ import java.util.Date;
  * 这个类表示游戏过程中的整个游戏界面，是一切的载体
  */
 public class ChessGameFrame extends JFrame {
+    public Begin begin;
     //    public final Dimension FRAME_SIZE ;
     private final int WIDTH;
     private final int HEIGTH;
@@ -31,6 +34,7 @@ public class ChessGameFrame extends JFrame {
     JLabel background;
     JLabel statusLabel ;
     JLabel timeLabel ;
+    public AI ai;
     public Saver saver;
     private String[] bgPaths = {"day.png", "night.png"};
     public ChessboardComponent getChessboardComponent() {
@@ -59,12 +63,12 @@ public class ChessGameFrame extends JFrame {
         addTurnLabel();
         addTimeLabel();
         addThemeButton();
+        addAiButton();
         addUndoButton();
         addRestartButton();
         addSaveButton();
         addLoadButton();
         addBackgroundImage();
-        addAiButton();
     }
 
 
@@ -231,8 +235,41 @@ public class ChessGameFrame extends JFrame {
 
         aiButton.addActionListener(e -> {
             System.out.println("ai");
+
+            // Define options
+            String[] options = new String[] {"Easy", "Difficult"};
+
+            // Show option dialog
+            int response = JOptionPane.showOptionDialog(
+                    this,                       // parent component
+                    "Select AI Difficulty",     // message
+                    "AI",                        // title
+                    JOptionPane.DEFAULT_OPTION, // option type
+                    JOptionPane.PLAIN_MESSAGE,  // message type
+                    null,                       // icon
+                    options,                    // options
+                    options[0]                  // initial value
+            );
+
+            // Handle response
+            switch (response) {
+                case 0:
+                    System.out.println("Easy selected");
+                    ai = new AI(Mode.Easy, chessboardComponent.getGameController().getChessboard());
+                    chessboardComponent.getGameController().restart();
+                    break;
+                case 1:
+                    System.out.println("Difficult selected");
+                    ai = new AI(Mode.Difficulty, chessboardComponent.getGameController().getChessboard());
+                    chessboardComponent.getGameController().restart();
+                    break;
+                default:
+                    System.out.println("No option selected");
+                    break;
+            }
         });
-
-
+    }
+    public AI getAi() {
+        return ai;
     }
 }

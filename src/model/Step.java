@@ -104,4 +104,8 @@ public class Step implements Serializable, Comparable<Step> {
     public int compareTo(Step o) {
         return o.getValue() - this.getValue();
     }
+
+    public ChessboardPoint getDest() {
+        return to;
+    }
 }
