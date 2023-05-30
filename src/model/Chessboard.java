@@ -428,7 +428,7 @@ public class Chessboard {
     public boolean isAllCaptured(PlayerColor playerColor) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
-                if (getChessPieceAt(new ChessboardPoint(i, j)) != null && getChessPieceAt(new ChessboardPoint(i, j)).getOwner() == playerColor) {
+                if (getChessPieceAt(new ChessboardPoint(i, j)) != null && getChessPieceAt(new ChessboardPoint(i, j)).getOwner() == playerColor&&getChessPieceAt(new ChessboardPoint(i,j)).getName()!="Trap") {
                     return false;
                 }
             }
@@ -473,5 +473,15 @@ public class Chessboard {
             }
         }
         return availablePoints;
+    }
+
+    public boolean willBeEaten(ChessboardPoint from) {
+        List<ChessboardPoint> availablePoints = getValidMoves(from);
+        for (ChessboardPoint point : availablePoints) {
+            if (getChessPieceAt(point) != null && getChessPieceAt(point).getOwner() != getChessPieceAt(from).getOwner()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

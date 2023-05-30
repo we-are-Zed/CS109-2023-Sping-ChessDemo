@@ -8,6 +8,7 @@ import java.net.URL;
 import view.Music;
 
 public class Main {
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Begin begin = new Begin();
@@ -21,8 +22,6 @@ public class Main {
         Thread music = new Thread(musicThread);
         music.start();
 
-        musicThread.setVolume(0.5f); // 设置音量为一半
-        float volume = musicThread.getVolume(); // 获取当前音量
-        System.out.println("volume: " + volume);
+        musicThread.setVolume(0.5f);
     }
 }

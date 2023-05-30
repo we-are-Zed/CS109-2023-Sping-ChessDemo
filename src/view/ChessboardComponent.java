@@ -299,4 +299,31 @@ public class ChessboardComponent extends JComponent {
             cellComponent.repaint();
         }
     }
+    public void runStep(Step step) {
+        ChessboardPoint from = step.getFrom();
+        ChessboardPoint to = step.getTo();
+        ChessPiece fromChessPiece = step.getFromChessPiece();
+        //检查 to 上是否有棋子，如果有，先移除
+        if (getGridComponentAt(to).getComponents().length > 0) {
+            removeChessComponentAtGrid(to);
+        }
+        if (fromChessPiece.getName().equals("Elephant")){
+            setChessComponentAtGrid(to, new ElephantChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Lion")){
+            setChessComponentAtGrid(to, new LionChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Tiger")){
+            setChessComponentAtGrid(to, new TigerChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Leopard")){
+            setChessComponentAtGrid(to, new LeopardChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Wolf")){
+            setChessComponentAtGrid(to, new WolfChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Dog")){
+            setChessComponentAtGrid(to, new DogChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Cat")){
+            setChessComponentAtGrid(to, new CatChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        } else if (fromChessPiece.getName().equals("Rat")){
+            setChessComponentAtGrid(to, new RatChessComponent(fromChessPiece.getOwner(), CHESS_SIZE));
+        }
+        removeChessComponentAtGrid(from);
+    }
 }

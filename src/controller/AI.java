@@ -3,6 +3,7 @@ package controller;
 import model.*;
 
 import java.util.List;
+import java.util.Random;
 
 public class AI {
     private Mode gameMode;
@@ -29,10 +30,13 @@ public class AI {
     }
     public Step runDifficulty(PlayerColor color) {
         List<Step> steps = model.getLegalMove(color);
+        Random random = new Random();
         Step bestStep = null;
+        Step safeStep = null;
         int maxEnemyRank = -1;
 
-        // Select the step that can attack the highest rank enemy
+        Step randomStep = steps.get(random.nextInt(steps.size()));
+
         for (Step step : steps) {
             ChessPiece piece = model.getChessPieceAt(step.getDest());
             if (piece != null && piece.getColor() != color) {
@@ -41,24 +45,19 @@ public class AI {
                     bestStep = step;
                 }
             }
-        }
 
-        if (bestStep == null) {
-            int minDistanceToBase = Integer.MAX_VALUE;
-            for (Step step : steps) {
-                int distanceToBase = computeDistanceToEnemyBase(step.getDest());
-                if (distanceToBase < minDistanceToBase) {
-                    minDistanceToBase = distanceToBase;
-                    bestStep = step;
-                }
+            if (model.willBeEaten(step.getFrom()) && safeStep == null) {
+                safeStep = step;
             }
         }
 
+        if (bestStep == null) {
+            if (safeStep != null) {
+                return safeStep;
+            }
+            return randomStep;
+        }
         return bestStep;
-    }
-
-    private int computeDistanceToEnemyBase(ChessboardPoint point) {
-        return point.getRow();
     }
     public String toString() {
         return "AI";

@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +44,7 @@ public class GameController implements GameListener {
     private List<ChessboardPoint> validMoves;
     public Time Timer;
 
+
     public GameController(ChessboardComponent view, Chessboard model) {
         stepList = new LinkedList<>();
         validMoves = new ArrayList<>();
@@ -55,9 +57,8 @@ public class GameController implements GameListener {
         initialize();
         view.initiateChessComponent(model);
         view.repaint();
-        Timer = new Time(view.getChessGameFrame().getTimeLabel());
-        Timer.setTime(45);
-        Timer.start();
+        Timer = new Time(view.getChessGameFrame().getTimeLabel(), view.getGameController());
+        Timer.start(45);
 
         if (gameMode == Mode.Easy || gameMode == Mode.Difficulty) {
             ai = new AI(gameMode, model);
@@ -75,35 +76,6 @@ public class GameController implements GameListener {
     public void swapColor() {
         currentPlayer = currentPlayer == PlayerColor.BLUE ? PlayerColor.RED : PlayerColor.BLUE;
         view.getChessGameFrame().getTurnLabel(currentPlayer, turnCount);
-    }
-
-    public void timer() {
-        final String[] s0 = new String[1];
-        ActionListener play = new ActionListener() {
-            long start = (System.currentTimeMillis() - 1000);
-
-            public void actionPerformed(ActionEvent e) {
-
-                long now = System.currentTimeMillis();
-
-                long change = now - start;
-
-                // 转换日期显示格式
-                SimpleDateFormat df = new SimpleDateFormat("mm:ss");
-                if (win()) {
-                    s0[0] = df.format(new Date(change));
-                } else {
-                    s0[0] = df.format(new Date(change));
-                    view.getChessGameFrame().getTime(s0[0]);
-                }
-            }
-        };
-        Timer timeAction0 = new Timer(1000, play);
-        timeAction0.start();
-        if (win()) {
-            timeAction0.stop();
-        }
-
     }
    public Chessboard getChessboard(){
         return model;
@@ -132,36 +104,32 @@ public class GameController implements GameListener {
             winner = PlayerColor.RED;
             return true;
         }
-        return false;
-        // TODO: Check the board if there is a winner
-    }
+        return false;}
 
     public void restart() {
         currentPlayer = PlayerColor.BLUE;
         winner = null;
         selectedPoint = null;
         turnCount = 1;
+        ai=null;
         model.initPieces();
         view.initiateGridComponents();
         view.initiateChessComponent(model);
         view.repaint();
-        Timer.setTime(45);
+        Timer.reset(45);
         view.getChessGameFrame().getTurnLabel(currentPlayer, turnCount);
         this.ai=view.getChessGameFrame().getAi();
-
     }
 
     public void gameOver() {
         if (winner == PlayerColor.BLUE) {
-            JOptionPane.showMessageDialog(null, "Blue wins!" + s0[0]);
+            JOptionPane.showMessageDialog(null, "Blue wins!" );
         } else if (winner == PlayerColor.RED) {
-            JOptionPane.showMessageDialog(null, "Red wins!" + s0[0]);
+            JOptionPane.showMessageDialog(null, "Red wins!" );
         }
         restart();
     }
 
-    // click an empty cell
-    // selected point 点的那个点   point ：分成有棋子和没棋子
     @Override
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {//如果有选中的棋子，且移动合法
@@ -179,7 +147,8 @@ public class GameController implements GameListener {
             }
             hideValidMoves();
             view.repaint();
-            Timer.setTime(45);
+            playMusic();
+            Timer.reset(45);
         }
         //if the chess enter Dens or Traps
         if (selectedPoint != null && model.isValidMove(selectedPoint, point) && model.grid[point.getRow()][point.getCol()].getType() == GridType.den) {
@@ -226,9 +195,10 @@ public class GameController implements GameListener {
                     aiMove();
                 }
                 view.repaint();
-                Timer.setTime(45);
+                playMusic();
+                Timer.reset(45);
+
             }
-            // TODO: Implement capture function
         }
         if (win()) {
             gameOver();
@@ -375,7 +345,6 @@ public class GameController implements GameListener {
                         Step step1 = new Step(point1, point2, model.grid[point1.getRow()][point1.getCol()].getPiece(), model.grid[point2.getRow()][point2.getCol()].getPiece(), PlayerColor.RED, turnCount, model.getGridAt(point2).getPiece());
                         stepList.add(step1);
                     }
-
                     model.captureChessPiece(point1, point2);
                     view.removeChessComponentAtGrid(point2);
                     view.setChessComponentAtGrid(point2, view.removeChessComponentAtGrid(point1));
@@ -383,6 +352,7 @@ public class GameController implements GameListener {
                     view.revalidate();
                     view.repaint();
                 }
+                turnCount=num/2;
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "读取失败",
@@ -466,15 +436,23 @@ public class GameController implements GameListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+             selectedPoint =null;
+             stepList.add(step);
+             model.runStep(step);
 
+             view.runStep(step);
+             view.repaint();
+             swapColor();
+             view.setAiPlay(false);
          }
-         selectedPoint =null;
-         stepList.add(step);
-            model.moveChessPiece(step.getFrom(), step.getTo());
-            view.setChessComponentAtGrid(step.getTo(), view.removeChessComponentAtGrid(step.getFrom()));
-            view.repaint();
-            swapColor();
-            view.setAiPlay(false);
      }
+    }
+
+    public void playMusic(){
+        URL eat = GameController.class.getResource("/14827.wav");
+        Music eatThread = new Music(eat, false);
+        Thread Eat = new Thread(eatThread);
+        Eat.start();
+        eatThread.setVolume(0.3f);
     }
 }
